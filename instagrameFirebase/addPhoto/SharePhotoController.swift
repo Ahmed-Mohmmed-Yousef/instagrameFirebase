@@ -7,6 +7,7 @@
 //
 
 import UIKit
+import Firebase
 
 class SharePhotoController: UIViewController {
     
@@ -27,6 +28,7 @@ class SharePhotoController: UIViewController {
     private lazy var textView: UITextView = {
         let tv = UITextView()
         tv.font = UIFont.systemFont(ofSize: 14)
+        
         return tv
     }()
     
@@ -44,9 +46,52 @@ class SharePhotoController: UIViewController {
     }
     
     @objc private func handelShare(){
-        print("Hi")
+        navigationItem.rightBarButtonItem?.isEnabled = false
+        
+        guard let image = selectedImage else { return }
+        guard let uploadData = image.jpegData(compressionQuality: 0.5) else { return }
+        let fileName = UUID().uuidString
+        let referance = Storage.storage().reference().child("posts").child(fileName)
+        referance.putData(uploadData, metadata: nil) { (metaData, error) in
+            if let error = error {
+                self.navigationItem.rightBarButtonItem?.isEnabled = true
+                print("Failed to uplaod image: ", error.localizedDescription)
+                return
+            }
+            
+            referance.downloadURL { (url, error) in
+                guard let imageURL = url?.absoluteString else { return }
+                print("image url : ", imageURL)
+                self.saveToDatabaseWithImageUrl(imageUrl: imageURL)
+            }
+        }
     }
     
+    private func saveToDatabaseWithImageUrl(imageUrl: String){
+        guard let uid = Auth.auth().currentUser?.uid else { return }
+        guard let caption = textView.text else { return }
+        guard let postImage = selectedImage else { return }
+        
+        let userPostRef = Database.database().reference().child("posts").child(uid)
+        let ref = userPostRef.childByAutoId()
+        let values: [String: Any] = ["imageUrl" : imageUrl,
+                      "caption" : caption,
+                      "imageWidth": postImage.size.width,
+                      "imageHeight": postImage.size.height,
+                      "creationDate": Date().timeIntervalSince1970]
+        
+        ref.updateChildValues(values) { (error, referance) in
+            if let error = error {
+                self.navigationItem.rightBarButtonItem?.isEnabled = true
+                print("Failed to save in DB: ", error.localizedDescription)
+                return
+            }
+            print("Success to upload post")
+            self.dismiss(animated: true)
+        }
+    }
+    
+    //MARK:- UI function
     fileprivate func setupImageAndTextView(){
         let containerView = UIView()
         containerView.backgroundColor = .white
