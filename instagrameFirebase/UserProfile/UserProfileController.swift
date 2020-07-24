@@ -16,15 +16,39 @@ private let reuseHeaderIdentifier = "headerId"
 class UserProfileController: UICollectionViewController, UICollectionViewDelegateFlowLayout {
     
     var user: User?
+    var posts = [Post]()
+    
 
     override func viewDidLoad() {
         super.viewDidLoad()
         collectionView.backgroundColor = .white
         navigationItem.title = "user profile"
-        collectionView.register(UICollectionViewCell.self, forCellWithReuseIdentifier: reuseCellIdentifier)
+        collectionView.register(UserProfilePhotoCell.self, forCellWithReuseIdentifier: reuseCellIdentifier)
         collectionView.register(UserProfileHeader.self, forSupplementaryViewOfKind: UICollectionView.elementKindSectionHeader, withReuseIdentifier: reuseHeaderIdentifier)
         fetchUsername()
         setupLogOutButton()
+        
+        fetchPosts()
+    }
+    
+    fileprivate func fetchPosts(){
+        guard let uid = Auth.auth().currentUser?.uid else { return }
+        Database.database().reference().child("posts").child(uid).observeSingleEvent(of: .value, with: { (snapshot) in
+            guard let dics = snapshot.value as? [String: Any] else { return }
+            dics.forEach { (key, value) in
+                guard let dic = value as? [String: Any] else {return}
+                let post = Post(dic: dic)
+                self.posts.append(post)
+            }
+            
+            // complet fetching all user posts
+            DispatchQueue.main.async {
+                self.collectionView.reloadData()
+            }
+            
+        }) { (error) in
+            print("Error :" , error.localizedDescription)
+        }
     }
     
     private func setupLogOutButton(){
@@ -67,12 +91,12 @@ class UserProfileController: UICollectionViewController, UICollectionViewDelegat
     }
     
     override func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
-        return 7
+        return posts.count
     }
     
     override func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
-        let cell = collectionView.dequeueReusableCell(withReuseIdentifier: reuseCellIdentifier, for: indexPath)
-        cell.backgroundColor = .systemRed
+        let cell = collectionView.dequeueReusableCell(withReuseIdentifier: reuseCellIdentifier, for: indexPath) as! UserProfilePhotoCell
+        cell.post = posts[indexPath.row]
         return cell
     }
     
@@ -103,12 +127,4 @@ class UserProfileController: UICollectionViewController, UICollectionViewDelegat
 
 }
 
-struct User {
-    let username: String
-    let profileImageURL: String
-    
-    init(dictionary: [String : Any]) {
-        self.username = dictionary["username"] as? String ?? ""
-        self.profileImageURL = dictionary["profileImageURL"] as? String ?? ""
-    }
-}
+
