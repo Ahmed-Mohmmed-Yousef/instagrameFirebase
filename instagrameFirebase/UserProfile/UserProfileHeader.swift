@@ -14,13 +14,14 @@ class UserProfileHeader: UICollectionViewCell {
     var user: User? {
         didSet {
             guard let profileImageURL = user?.profileImageURL else { return }
-            fetchUserProfileImage(urlString: profileImageURL)
+            
+            profileImageView.loadImage(urlString: profileImageURL)
             usernameLbl.text = user?.username
         }
     }
     
-    private lazy var profileImageView: UIImageView = {
-        let iv = UIImageView()
+    private lazy var profileImageView: CustomImageView = {
+        let iv = CustomImageView()
         iv.backgroundColor = .systemGreen
         iv.layer.cornerRadius = 80 / 2
         iv.clipsToBounds = true
@@ -119,20 +120,6 @@ class UserProfileHeader: UICollectionViewCell {
         fatalError("init(coder:) has not been implemented")
     }
     
-    private func fetchUserProfileImage(urlString: String){
-        guard let url = URL(string: urlString) else { return }
-        URLSession.shared.dataTask(with: url) { (data, _, error) in
-            if let error = error {
-                print("Error with fetchong profile image ", error.localizedDescription)
-                return
-            }
-            guard let data = data else { return }
-            let image = UIImage(data: data)
-            DispatchQueue.main.async {
-                self.profileImageView.image = image
-            }
-        }.resume()
-    }
     
     private func addViews(){
         addSubViews(views: profileImageView,

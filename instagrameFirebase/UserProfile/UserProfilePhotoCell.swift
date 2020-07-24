@@ -13,12 +13,12 @@ class UserProfilePhotoCell: UICollectionViewCell {
     var post: Post? {
         didSet{
             guard let imageUrl = post?.imageUrl else { return }
-            fetchUserProfileImage(urlString: imageUrl)
+            imageView.loadImage(urlString: imageUrl)
         }
     }
     
-    var imageView: UIImageView = {
-        let imgv = UIImageView()
+    var imageView: CustomImageView = {
+        let imgv = CustomImageView()
         imgv.backgroundColor = .lightGray
         imgv.contentMode = .scaleAspectFill
         imgv.clipsToBounds = true

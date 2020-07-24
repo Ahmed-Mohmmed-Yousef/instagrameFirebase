@@ -28,12 +28,31 @@ class UserProfileController: UICollectionViewController, UICollectionViewDelegat
         fetchUsername()
         setupLogOutButton()
         
-        fetchPosts()
+//        fetchPosts()
+        fetchOrederedPosts()
+    }
+    
+    fileprivate func fetchOrederedPosts(){
+        guard let uid = Auth.auth().currentUser?.uid else { return }
+        let ref = Database.database().reference().child("posts").child(uid)
+        ref.queryOrdered(byChild: "creationDate").observe(.childAdded, with: { (snapshot) in
+            guard let dic = snapshot.value as? [String: Any] else { return }
+            let post = Post(dic: dic)
+            self.posts.append(post)
+            let indexPath = IndexPath(row: self.posts.count - 1, section: 0)
+            // complet fetching all user posts
+            DispatchQueue.main.async {
+                self.collectionView.insertItems(at: [indexPath])
+            }
+        }) { (error) in
+            print("Error in fetchOrderedPosts function: ", error.localizedDescription)
+        }
     }
     
     fileprivate func fetchPosts(){
         guard let uid = Auth.auth().currentUser?.uid else { return }
-        Database.database().reference().child("posts").child(uid).observeSingleEvent(of: .value, with: { (snapshot) in
+        let ref = Database.database().reference().child("posts").child(uid)
+            ref.observeSingleEvent(of: .value, with: { (snapshot) in
             guard let dics = snapshot.value as? [String: Any] else { return }
             dics.forEach { (key, value) in
                 guard let dic = value as? [String: Any] else {return}
