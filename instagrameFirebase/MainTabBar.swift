@@ -44,7 +44,7 @@ class MainTabBar: UITabBarController, UITabBarControllerDelegate {
     
     func setViewControllers(){
         //Home
-        let homeController = templetNavController(image: UIImage(systemName: "house")!, selectedImage: UIImage(systemName: "house.fill")!)
+        let homeController = templetNavController(image: UIImage(systemName: "house")!, selectedImage: UIImage(systemName: "house.fill")!, rooteViewController: HomeController(collectionViewLayout: UICollectionViewFlowLayout()))
        
         
         //Search

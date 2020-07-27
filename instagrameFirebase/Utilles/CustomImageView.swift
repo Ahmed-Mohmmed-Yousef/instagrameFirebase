@@ -8,9 +8,17 @@
 
 import UIKit
 
+var imageCache = [String: UIImage]()
+var numCall = 0
 class CustomImageView: UIImageView {
     
     func loadImage(urlString: String){
+        if let cachImage = imageCache[urlString] {
+            self.image = cachImage
+            numCall += 1
+//            print("from image cache ", numCall)
+            return
+        }
         guard let url = URL(string: urlString) else { return }
         URLSession.shared.dataTask(with: url) { (data, _, error) in
             if let error = error {
@@ -19,6 +27,8 @@ class CustomImageView: UIImageView {
             }
             guard let data = data else { return }
             let image = UIImage(data: data)
+            // iamge caching
+            imageCache[url.absoluteString] = image
             DispatchQueue.main.async {
                 self.image = image
             }

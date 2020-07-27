@@ -15,6 +15,8 @@
 		248B7AD02497A36F00B85E32 /* View+Ext.swift in Sources */ = {isa = PBXBuildFile; fileRef = 248B7ACF2497A36F00B85E32 /* View+Ext.swift */; };
 		248B7AD42497FF2600B85E32 /* GoogleService-Info.plist in Resources */ = {isa = PBXBuildFile; fileRef = 248B7AD32497FF2600B85E32 /* GoogleService-Info.plist */; };
 		249BDAB024C47708002E1C4E /* LoginController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 249BDAAF24C47708002E1C4E /* LoginController.swift */; };
+		24C726D924CD78E10090403B /* HomeController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 24C726D824CD78E10090403B /* HomeController.swift */; };
+		24C726DB24CD7B130090403B /* HomePostCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 24C726DA24CD7B130090403B /* HomePostCell.swift */; };
 		24D30CCE249C069C004056B0 /* MainTabBar.swift in Sources */ = {isa = PBXBuildFile; fileRef = 24D30CCD249C069C004056B0 /* MainTabBar.swift */; };
 		24D30CD0249C0718004056B0 /* UserProfileController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 24D30CCF249C0718004056B0 /* UserProfileController.swift */; };
 		24D30CD3249C285C004056B0 /* UserProfileHeader.swift in Sources */ = {isa = PBXBuildFile; fileRef = 24D30CD2249C285B004056B0 /* UserProfileHeader.swift */; };
@@ -40,6 +42,8 @@
 		248B7ACF2497A36F00B85E32 /* View+Ext.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "View+Ext.swift"; sourceTree = "<group>"; };
 		248B7AD32497FF2600B85E32 /* GoogleService-Info.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = "GoogleService-Info.plist"; sourceTree = "<group>"; };
 		249BDAAF24C47708002E1C4E /* LoginController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LoginController.swift; sourceTree = "<group>"; };
+		24C726D824CD78E10090403B /* HomeController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HomeController.swift; sourceTree = "<group>"; };
+		24C726DA24CD7B130090403B /* HomePostCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HomePostCell.swift; sourceTree = "<group>"; };
 		24D30CCD249C069C004056B0 /* MainTabBar.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MainTabBar.swift; sourceTree = "<group>"; };
 		24D30CCF249C0718004056B0 /* UserProfileController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UserProfileController.swift; sourceTree = "<group>"; };
 		24D30CD2249C285B004056B0 /* UserProfileHeader.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UserProfileHeader.swift; sourceTree = "<group>"; };
@@ -89,6 +93,7 @@
 		248B7ABA2497A21A00B85E32 /* instagrameFirebase */ = {
 			isa = PBXGroup;
 			children = (
+				24C726D724CD78AD0090403B /* HomeController */,
 				24D9F9ED24CB10DF00163F90 /* Models */,
 				24D9F99D24C6F64400163F90 /* addPhoto */,
 				249BDAAE24C476DB002E1C4E /* LoginController */,
@@ -112,6 +117,15 @@
 				248B7ABF2497A21A00B85E32 /* SignUpViewController.swift */,
 			);
 			path = LoginController;
+			sourceTree = "<group>";
+		};
+		24C726D724CD78AD0090403B /* HomeController */ = {
+			isa = PBXGroup;
+			children = (
+				24C726D824CD78E10090403B /* HomeController.swift */,
+				24C726DA24CD7B130090403B /* HomePostCell.swift */,
+			);
+			path = HomeController;
 			sourceTree = "<group>";
 		};
 		24D30CD1249C282D004056B0 /* UserProfile */ = {
@@ -287,12 +301,14 @@
 			files = (
 				248B7AD02497A36F00B85E32 /* View+Ext.swift in Sources */,
 				24D30CD3249C285C004056B0 /* UserProfileHeader.swift in Sources */,
+				24C726DB24CD7B130090403B /* HomePostCell.swift in Sources */,
 				248B7AC02497A21A00B85E32 /* SignUpViewController.swift in Sources */,
 				24D9F99F24C6F67400163F90 /* PhotoSelectorController.swift in Sources */,
 				24D9F9EF24CB10F300163F90 /* Post.swift in Sources */,
 				24D30CD0249C0718004056B0 /* UserProfileController.swift in Sources */,
 				248B7ABC2497A21A00B85E32 /* AppDelegate.swift in Sources */,
 				24D9F9AB24C9635D00163F90 /* SharePhotoController.swift in Sources */,
+				24C726D924CD78E10090403B /* HomeController.swift in Sources */,
 				24D9F9F324CB152E00163F90 /* User.swift in Sources */,
 				24D9F9F624CB2C8300163F90 /* CustomImageView.swift in Sources */,
 				24D9F9A324C72DF400163F90 /* PhotoSelectorHeader.swift in Sources */,

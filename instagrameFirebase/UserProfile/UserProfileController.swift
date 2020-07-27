@@ -49,26 +49,26 @@ class UserProfileController: UICollectionViewController, UICollectionViewDelegat
         }
     }
     
-    fileprivate func fetchPosts(){
-        guard let uid = Auth.auth().currentUser?.uid else { return }
-        let ref = Database.database().reference().child("posts").child(uid)
-            ref.observeSingleEvent(of: .value, with: { (snapshot) in
-            guard let dics = snapshot.value as? [String: Any] else { return }
-            dics.forEach { (key, value) in
-                guard let dic = value as? [String: Any] else {return}
-                let post = Post(dic: dic)
-                self.posts.append(post)
-            }
-            
-            // complet fetching all user posts
-            DispatchQueue.main.async {
-                self.collectionView.reloadData()
-            }
-            
-        }) { (error) in
-            print("Error :" , error.localizedDescription)
-        }
-    }
+//    fileprivate func fetchPosts(){
+//        guard let uid = Auth.auth().currentUser?.uid else { return }
+//        let ref = Database.database().reference().child("posts").child(uid)
+//            ref.observeSingleEvent(of: .value, with: { (snapshot) in
+//            guard let dics = snapshot.value as? [String: Any] else { return }
+//            dics.forEach { (key, value) in
+//                guard let dic = value as? [String: Any] else {return}
+//                let post = Post(dic: dic)
+//                self.posts.append(post)
+//            }
+//
+//            // complet fetching all user posts
+//            DispatchQueue.main.async {
+//                self.collectionView.reloadData()
+//            }
+//
+//        }) { (error) in
+//            print("Error :" , error.localizedDescription)
+//        }
+//    }
     
     private func setupLogOutButton(){
         navigationItem.rightBarButtonItem = UIBarButtonItem(image: UIImage(systemName: "square.and.pencil")?.withRenderingMode(.alwaysOriginal), style: .plain, target: self, action: #selector(handelLogOut))
