@@ -9,10 +9,12 @@
 import Foundation
 import Firebase
 struct User {
+    let uid: String
     let username: String
     let profileImageURL: String
     
-    init(dictionary: [String : Any]) {
+    init(uid: String, dictionary: [String : Any]) {
+        self.uid = uid
         self.username = dictionary["username"] as? String ?? ""
         self.profileImageURL = dictionary["profileImageURL"] as? String ?? ""
     }
@@ -27,7 +29,7 @@ func getUser(uid: String, handler: @escaping(User?, Error?) -> Void) {
     let userRef = Database.database().reference().child("users").child(uid)
     userRef.observeSingleEvent(of: .value, with: { (snapshot) in
         guard let userDic = snapshot.value as? [String: Any] else { return }
-        let user = User(dictionary: userDic)
+        let user = User(uid: uid, dictionary: userDic)
         userCach[uid] = user
         handler(user, nil)
     }) { (error) in

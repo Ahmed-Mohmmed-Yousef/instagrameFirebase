@@ -93,8 +93,8 @@
 		248B7ABA2497A21A00B85E32 /* instagrameFirebase */ = {
 			isa = PBXGroup;
 			children = (
-				24C726D724CD78AD0090403B /* HomeController */,
 				24D9F9ED24CB10DF00163F90 /* Models */,
+				24C726D724CD78AD0090403B /* HomeController */,
 				24D9F99D24C6F64400163F90 /* addPhoto */,
 				249BDAAE24C476DB002E1C4E /* LoginController */,
 				24D30CD1249C282D004056B0 /* UserProfile */,

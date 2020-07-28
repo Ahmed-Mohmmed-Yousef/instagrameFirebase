@@ -7,6 +7,7 @@
 //
 
 import Foundation
+import Firebase
 
 struct Post {
     let user: User
@@ -18,4 +19,8 @@ struct Post {
         self.imageUrl = dic["imageUrl"] as? String ?? ""
         self.caption = dic["caption"] as? String ?? ""
     }
+}
+
+func fetchPostWith(user: User){
+    
 }
