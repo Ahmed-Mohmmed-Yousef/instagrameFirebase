@@ -12,14 +12,18 @@ class HomePostCell: UICollectionViewCell {
     
     var post: Post? {
         didSet {
-            guard let imageUrl = post?.imageUrl else {return}
-            photoIamgeView.loadImage(urlString: imageUrl)
+            guard let post = post else {return}
+            photoIamgeView.loadImage(urlString: post.imageUrl)
+            usernameLabel.text = post.user.username
+//            captionLabel.text = post.caption
+            setupAttributedCaption()
+            userProfileImageView.loadImage(urlString: post.user.profileImageURL)
         }
     }
     
     lazy var userProfileImageView: CustomImageView = {
         let iv = CustomImageView()
-        iv.backgroundColor = .systemBlue
+        iv.image = UIImage(systemName: "person")
         iv.contentMode = .scaleAspectFill
         iv.clipsToBounds = true
         return iv
@@ -100,6 +104,18 @@ class HomePostCell: UICollectionViewCell {
         fatalError("init(coder:) has not been implemented")
     }
     
+    private func setupAttributedCaption() {
+        guard let post = post else {
+            return
+        }
+        let attributedText = NSMutableAttributedString(string: post.user.username, attributes: [NSAttributedString.Key.font : UIFont.boldSystemFont(ofSize: 14)])
+        attributedText.append(NSAttributedString(string: " \(post.caption)", attributes: [NSAttributedString.Key.font : UIFont.systemFont(ofSize: 14)]))
+        attributedText.append(NSAttributedString(string: "\n\n", attributes: [NSAttributedString.Key.font : UIFont.systemFont(ofSize: 4)]))
+        attributedText.append(NSAttributedString(string: "1week ago", attributes: [NSAttributedString.Key.foregroundColor : UIColor.gray]))
+        captionLabel.attributedText = attributedText
+    }
+    
+    //MARK:- setup UI
     private func setupUserProfileIamgeView(){
         userProfileImageView.anchor(top: topAnchor,
                                     leading: leadingAnchor,

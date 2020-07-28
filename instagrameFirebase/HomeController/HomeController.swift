@@ -33,24 +33,45 @@ class HomeController: UICollectionViewController, UICollectionViewDelegateFlowLa
     
     fileprivate func fetchPosts(){
         guard let uid = Auth.auth().currentUser?.uid else { return }
-        let ref = Database.database().reference().child("posts").child(uid)
-        ref.observeSingleEvent(of: .value, with: { (snapshot) in
-            guard let dics = snapshot.value as? [String: Any] else { return }
-            dics.forEach { (key, value) in
-                guard let dic = value as? [String: Any] else {return}
-                let post = Post(dic: dic)
-                self.posts.append(post)
+        
+//        let userRef = Database.database().reference().child("users").child(uid)
+//        userRef.observeSingleEvent(of: .value, with: { (snapshot) in
+//            guard let userDic = snapshot.value as? [String: Any] else { return }
+//            let user = User(dictionary: userDic)
+//            
+//        }) { (error) in
+//            print("faild to get user for post: ", error.localizedDescription)
+//        }
+        
+        // get user for post
+        getUser(uid: uid) { (user, error) in
+            if let error = error {
+                print("faild to get user for post: ", error.localizedDescription)
+                return
             }
             
-            // complet fetching all user posts
-            DispatchQueue.main.async {
-                print("reload collection view in feth posts")
-                self.collectionView.reloadData()
-            }
+            guard let user = user else { return }
             
-        }) { (error) in
-            print("Error :" , error.localizedDescription)
+            let ref = Database.database().reference().child("posts").child(uid)
+            ref.observeSingleEvent(of: .value, with: { (snapshot) in
+                guard let dics = snapshot.value as? [String: Any] else { return }
+                dics.forEach { (key, value) in
+                    guard let dic = value as? [String: Any] else {return}
+                    let post = Post(user: user, dic: dic)
+                    self.posts.append(post)
+                }
+                
+                // complet fetching all user posts
+                DispatchQueue.main.async {
+                    self.collectionView.reloadData()
+                }
+                
+            }) { (error) in
+                print("Error :" , error.localizedDescription)
+            }
         }
+        
+        
     }
     
     //MARK:- UICollectionViewDelegate

@@ -37,9 +37,11 @@ class UserProfileController: UICollectionViewController, UICollectionViewDelegat
         let ref = Database.database().reference().child("posts").child(uid)
         ref.queryOrdered(byChild: "creationDate").observe(.childAdded, with: { (snapshot) in
             guard let dic = snapshot.value as? [String: Any] else { return }
-            let post = Post(dic: dic)
-            self.posts.append(post)
-            let indexPath = IndexPath(row: self.posts.count - 1, section: 0)
+            guard let user = self.user else {return}
+            
+            let post = Post(user: user, dic: dic)
+            self.posts.insert(post, at: 0)
+            let indexPath = IndexPath(row: 0, section: 0)
             // complet fetching all user posts
             DispatchQueue.main.async {
                 self.collectionView.insertItems(at: [indexPath])
@@ -97,15 +99,29 @@ class UserProfileController: UICollectionViewController, UICollectionViewDelegat
     
     private func fetchUsername(){
         guard let uid = Auth.auth().currentUser?.uid else { return }
-        let refrance = Database.database().reference()
-        refrance.child("users").child(uid).observeSingleEvent(of: .value, with: {[weak self] (snapshot) in
+        // old code
+//        let refrance = Database.database().reference()
+//        refrance.child("users").child(uid).observeSingleEvent(of: .value, with: {[weak self] (snapshot) in
+//            guard let self = self else { return }
+//            guard let dic = snapshot.value as? [String : Any] else { return }
+//            self.user = User(dictionary: dic)
+//            self.navigationItem.title = self.user?.username
+//            self.collectionView.reloadData()
+//        }) { (error) in
+//            print("error accured during fetch user naem: ", error.localizedDescription)
+//        }
+        
+        // new code
+        getUser(uid: uid) {[weak self] (user, error) in
+            if let error = error {
+                print("error accured during fetch user naem: ", error.localizedDescription)
+                return
+            }
+            
             guard let self = self else { return }
-            guard let dic = snapshot.value as? [String : Any] else { return }
-            self.user = User(dictionary: dic)
+            self.user = user
             self.navigationItem.title = self.user?.username
             self.collectionView.reloadData()
-        }) { (error) in
-            print("error accured during fetch user naem: ", error.localizedDescription)
         }
     }
     

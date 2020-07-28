@@ -9,9 +9,13 @@
 import Foundation
 
 struct Post {
+    let user: User
     let imageUrl: String
+    let caption: String
     
-    init(dic: [String: Any]) {
+    init(user: User, dic: [String: Any]) {
+        self.user = user
         self.imageUrl = dic["imageUrl"] as? String ?? ""
+        self.caption = dic["caption"] as? String ?? ""
     }
 }
