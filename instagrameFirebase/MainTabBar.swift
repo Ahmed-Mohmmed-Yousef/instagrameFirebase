@@ -48,7 +48,7 @@ class MainTabBar: UITabBarController, UITabBarControllerDelegate {
        
         
         //Search
-        let searchController = templetNavController(image: UIImage(systemName: "magnifyingglass")!, selectedImage: UIImage(systemName: "magnifyingglass")!)
+        let searchController = templetNavController(image: UIImage(systemName: "magnifyingglass")!, selectedImage: UIImage(systemName: "magnifyingglass")!,rooteViewController: UserSearchController(collectionViewLayout: UICollectionViewFlowLayout()))
         
         //plus
         let plusController = templetNavController(image: UIImage(systemName: "plus.square")!, selectedImage: UIImage(systemName: "plus.square.fill")!)
@@ -63,8 +63,8 @@ class MainTabBar: UITabBarController, UITabBarControllerDelegate {
         let userProfileNavController = templetNavController(image: UIImage(systemName: "person")!, selectedImage: UIImage(systemName: "person.fill")!, rooteViewController: userProfileController)
         
         tabBar.tintColor = .black
-        viewControllers = [homeController,
-                           searchController,
+        viewControllers = [searchController,
+                           homeController,
                            plusController,
                            likeController,
                            userProfileNavController]

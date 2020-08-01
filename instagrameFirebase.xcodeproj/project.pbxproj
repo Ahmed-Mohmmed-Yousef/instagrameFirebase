@@ -7,6 +7,8 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		246C45C424D542B90059AE7B /* UserSearchController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 246C45C324D542B90059AE7B /* UserSearchController.swift */; };
+		246C45C624D558470059AE7B /* UserSearchCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 246C45C524D558470059AE7B /* UserSearchCell.swift */; };
 		248B7ABC2497A21A00B85E32 /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 248B7ABB2497A21A00B85E32 /* AppDelegate.swift */; };
 		248B7ABE2497A21A00B85E32 /* SceneDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 248B7ABD2497A21A00B85E32 /* SceneDelegate.swift */; };
 		248B7AC02497A21A00B85E32 /* SignUpViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 248B7ABF2497A21A00B85E32 /* SignUpViewController.swift */; };
@@ -32,6 +34,8 @@
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
+		246C45C324D542B90059AE7B /* UserSearchController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UserSearchController.swift; sourceTree = "<group>"; };
+		246C45C524D558470059AE7B /* UserSearchCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UserSearchCell.swift; sourceTree = "<group>"; };
 		248B7AB82497A21A00B85E32 /* instagrameFirebase.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = instagrameFirebase.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		248B7ABB2497A21A00B85E32 /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
 		248B7ABD2497A21A00B85E32 /* SceneDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SceneDelegate.swift; sourceTree = "<group>"; };
@@ -72,6 +76,15 @@
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
+		246C45C224D542800059AE7B /* Search */ = {
+			isa = PBXGroup;
+			children = (
+				246C45C324D542B90059AE7B /* UserSearchController.swift */,
+				246C45C524D558470059AE7B /* UserSearchCell.swift */,
+			);
+			path = Search;
+			sourceTree = "<group>";
+		};
 		248B7AAF2497A21900B85E32 = {
 			isa = PBXGroup;
 			children = (
@@ -93,6 +106,7 @@
 		248B7ABA2497A21A00B85E32 /* instagrameFirebase */ = {
 			isa = PBXGroup;
 			children = (
+				246C45C224D542800059AE7B /* Search */,
 				24D9F9ED24CB10DF00163F90 /* Models */,
 				24C726D724CD78AD0090403B /* HomeController */,
 				24D9F99D24C6F64400163F90 /* addPhoto */,
@@ -299,12 +313,14 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				246C45C624D558470059AE7B /* UserSearchCell.swift in Sources */,
 				248B7AD02497A36F00B85E32 /* View+Ext.swift in Sources */,
 				24D30CD3249C285C004056B0 /* UserProfileHeader.swift in Sources */,
 				24C726DB24CD7B130090403B /* HomePostCell.swift in Sources */,
 				248B7AC02497A21A00B85E32 /* SignUpViewController.swift in Sources */,
 				24D9F99F24C6F67400163F90 /* PhotoSelectorController.swift in Sources */,
 				24D9F9EF24CB10F300163F90 /* Post.swift in Sources */,
+				246C45C424D542B90059AE7B /* UserSearchController.swift in Sources */,
 				24D30CD0249C0718004056B0 /* UserProfileController.swift in Sources */,
 				248B7ABC2497A21A00B85E32 /* AppDelegate.swift in Sources */,
 				24D9F9AB24C9635D00163F90 /* SharePhotoController.swift in Sources */,
