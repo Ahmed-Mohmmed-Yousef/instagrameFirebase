@@ -33,7 +33,7 @@ class UserProfileController: UICollectionViewController, UICollectionViewDelegat
     }
     
     fileprivate func fetchOrederedPosts(){
-        guard let uid = Auth.auth().currentUser?.uid else { return }
+        guard let uid = user?.uid else { return }
         let ref = Database.database().reference().child("posts").child(uid)
         ref.queryOrdered(byChild: "creationDate").observe(.childAdded, with: { (snapshot) in
             guard let dic = snapshot.value as? [String: Any] else { return }
@@ -73,6 +73,7 @@ class UserProfileController: UICollectionViewController, UICollectionViewDelegat
 //    }
     
     private func setupLogOutButton(){
+        if user?.uid != Auth.auth().currentUser?.uid { return }
         navigationItem.rightBarButtonItem = UIBarButtonItem(image: UIImage(systemName: "square.and.pencil")?.withRenderingMode(.alwaysOriginal), style: .plain, target: self, action: #selector(handelLogOut))
     }
     
@@ -98,7 +99,7 @@ class UserProfileController: UICollectionViewController, UICollectionViewDelegat
     
     
     private func fetchUsername(){
-        guard let uid = Auth.auth().currentUser?.uid else { return }
+        guard let uid = user?.uid else { return }
         // old code
 //        let refrance = Database.database().reference()
 //        refrance.child("users").child(uid).observeSingleEvent(of: .value, with: {[weak self] (snapshot) in

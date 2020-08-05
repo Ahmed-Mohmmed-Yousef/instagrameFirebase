@@ -23,7 +23,7 @@ class UserSearchController: UICollectionViewController, UICollectionViewDelegate
         sb.delegate = self
         return sb
     }()
-
+    
     override func viewDidLoad() {
         super.viewDidLoad()
         collectionView.backgroundColor = .white
@@ -32,11 +32,20 @@ class UserSearchController: UICollectionViewController, UICollectionViewDelegate
         fetchUsers()
     }
     
+    override func viewDidAppear(_ animated: Bool) {
+        super.viewDidAppear(animated)
+        seachBar.isHidden = false
+    }
+    
     fileprivate func fetchUsers(){
         let ref = Database.database().reference().child("users")
         ref.observeSingleEvent(of: .value, with: { (snapshot) in
             guard let dics = snapshot.value as? [String: Any] else { return }
             dics.forEach { (key, value) in
+                if key == Auth.auth().currentUser?.uid {
+                    print("find my self")
+                    return
+                }
                 guard let userDic = value as? [String: Any] else { return }
                 let user = User(uid: key, dictionary: userDic)
                 self.users.append(user)
@@ -89,6 +98,13 @@ class UserSearchController: UICollectionViewController, UICollectionViewDelegate
     func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, sizeForItemAt indexPath: IndexPath) -> CGSize {
         return CGSize(width: view.frame.width, height: 60)
     }
-
+    
+    override func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
+        seachBar.isHidden = true
+        let selectedUser = seachBar.text?.isEmpty ?? true ? users[indexPath.row] : resultUsers[indexPath.row]
+        let selectedUserPrfile = UserProfileController(collectionViewLayout: UICollectionViewFlowLayout())
+        selectedUserPrfile.user = selectedUser
+        navigationController?.pushViewController(selectedUserPrfile, animated: true)
+    }
 }
 
