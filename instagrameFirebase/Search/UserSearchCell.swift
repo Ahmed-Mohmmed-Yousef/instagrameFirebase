@@ -21,7 +21,6 @@ class UserSearchCell: UICollectionViewCell {
     private lazy var photo: CustomImageView = {
         let iv = CustomImageView()
         iv.contentMode = .scaleAspectFit
-        iv.backgroundColor = .systemYellow
         iv.clipsToBounds = true
         return iv
     }()

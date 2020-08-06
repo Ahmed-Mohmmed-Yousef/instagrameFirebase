@@ -17,12 +17,12 @@ class UserProfileHeader: UICollectionViewCell {
             
             profileImageView.loadImage(urlString: profileImageURL)
             usernameLbl.text = user?.username
+            setupEditFollowButton()
         }
     }
     
     private lazy var profileImageView: CustomImageView = {
         let iv = CustomImageView()
-        iv.backgroundColor = .systemGreen
         iv.layer.cornerRadius = 80 / 2
         iv.clipsToBounds = true
         return iv
@@ -105,7 +105,7 @@ class UserProfileHeader: UICollectionViewCell {
         layoutUI()
     }
     
-    private lazy var editProfileButton: UIButton = {
+    private lazy var editProfileFollowButton: UIButton = {
         let btn = UIButton(type: .system)
         btn.setTitle("Edit Profile", for: .normal)
         btn.setTitleColor(.black, for: .normal)
@@ -113,6 +113,7 @@ class UserProfileHeader: UICollectionViewCell {
         btn.layer.cornerRadius = 5
         btn.layer.borderColor = UIColor.lightGray.cgColor
         btn.layer.borderWidth = 1
+        btn.addTarget(self, action: #selector(handelEditOrFollow), for: .touchUpInside)
         return btn
     }()
     
@@ -131,8 +132,62 @@ class UserProfileHeader: UICollectionViewCell {
                     postLbl,
                     followersLbl,
                     followingLbl,
-                    editProfileButton)
+                    editProfileFollowButton)
     }
+    
+    
+    private func setupEditFollowButton(){
+        guard let currentUserId = Auth.auth().currentUser?.uid else { return }
+        guard let userId = user?.uid else { return }
+        if userId != currentUserId {
+            Database.database().reference().child("following").child(currentUserId).child(userId).observeSingleEvent(of: .value, with: { (snapshot) in
+                if let isFollowing = snapshot.value as? Int, isFollowing == 1 {
+                    self.editProfileFollowButton.setTitle("Unfollow", for: .normal)
+                } else {
+                    self.updateFolowButton(isFollow: false)
+                }
+            }) { (error) in
+                print(error.localizedDescription)
+            }
+            
+        }
+    }
+    
+    @objc private func handelEditOrFollow() {
+        guard let currentUserId = Auth.auth().currentUser?.uid else { return }
+        guard let userId = user?.uid else { return }
+        if editProfileFollowButton.titleLabel?.text == "Unfollow" {
+            // unfollow
+             let ref = Database.database().reference().child("following").child(currentUserId)
+            ref.removeValue { (error, ref) in
+                if let error = error {
+                    print(error.localizedDescription)
+                    return
+                }
+                self.updateFolowButton(isFollow: false)
+            }
+        } else {
+            // follow
+            let ref = Database.database().reference().child("following").child(currentUserId)
+            let value = [userId: 1]
+            ref.updateChildValues(value) { (error, ref) in
+                if let error = error {
+                    print("Fiald to follow user:", error.localizedDescription)
+                    return
+                }
+                self.updateFolowButton(isFollow: true)
+            }
+        }
+    }
+    
+    fileprivate func updateFolowButton(isFollow: Bool) {
+        self.editProfileFollowButton.setTitle(isFollow ? "Unfollow" : "Follow", for: .normal)
+        self.editProfileFollowButton.backgroundColor = isFollow ?.white : .rgb(red: 17, green: 154, blue: 237)
+        self.editProfileFollowButton.setTitleColor(isFollow ? .black : .white, for: .normal)
+        self.editProfileFollowButton.layer.borderColor = UIColor(white: 0, alpha: 0.2).cgColor
+        print(isFollow ? "Follow" : "Unfollow")
+    }
+    
     
     private func setupUserProfileImageView(){
         profileImageView.anchor(top: topAnchor,
@@ -192,7 +247,7 @@ class UserProfileHeader: UICollectionViewCell {
     }
     
     private func setupEditProfileButton(){
-        editProfileButton.anchor(top: stack.bottomAnchor,
+        editProfileFollowButton.anchor(top: stack.bottomAnchor,
                                  leading: profileImageView.trailingAnchor,
                                  trailing: trailingAnchor,
                                  paddingTop: 4,

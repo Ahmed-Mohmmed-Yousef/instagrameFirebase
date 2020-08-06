@@ -18,7 +18,7 @@ class UserProfileController: UICollectionViewController, UICollectionViewDelegat
     var user: User?
     var posts = [Post]()
     
-
+    
     override func viewDidLoad() {
         super.viewDidLoad()
         collectionView.backgroundColor = .white
@@ -28,7 +28,7 @@ class UserProfileController: UICollectionViewController, UICollectionViewDelegat
         fetchUsername()
         setupLogOutButton()
         
-//        fetchPosts()
+        //        fetchPosts()
         fetchOrederedPosts()
     }
     
@@ -51,26 +51,26 @@ class UserProfileController: UICollectionViewController, UICollectionViewDelegat
         }
     }
     
-//    fileprivate func fetchPosts(){
-//        guard let uid = Auth.auth().currentUser?.uid else { return }
-//        let ref = Database.database().reference().child("posts").child(uid)
-//            ref.observeSingleEvent(of: .value, with: { (snapshot) in
-//            guard let dics = snapshot.value as? [String: Any] else { return }
-//            dics.forEach { (key, value) in
-//                guard let dic = value as? [String: Any] else {return}
-//                let post = Post(dic: dic)
-//                self.posts.append(post)
-//            }
-//
-//            // complet fetching all user posts
-//            DispatchQueue.main.async {
-//                self.collectionView.reloadData()
-//            }
-//
-//        }) { (error) in
-//            print("Error :" , error.localizedDescription)
-//        }
-//    }
+    //    fileprivate func fetchPosts(){
+    //        guard let uid = Auth.auth().currentUser?.uid else { return }
+    //        let ref = Database.database().reference().child("posts").child(uid)
+    //            ref.observeSingleEvent(of: .value, with: { (snapshot) in
+    //            guard let dics = snapshot.value as? [String: Any] else { return }
+    //            dics.forEach { (key, value) in
+    //                guard let dic = value as? [String: Any] else {return}
+    //                let post = Post(dic: dic)
+    //                self.posts.append(post)
+    //            }
+    //
+    //            // complet fetching all user posts
+    //            DispatchQueue.main.async {
+    //                self.collectionView.reloadData()
+    //            }
+    //
+    //        }) { (error) in
+    //            print("Error :" , error.localizedDescription)
+    //        }
+    //    }
     
     private func setupLogOutButton(){
         if user?.uid != Auth.auth().currentUser?.uid { return }
@@ -99,31 +99,41 @@ class UserProfileController: UICollectionViewController, UICollectionViewDelegat
     
     
     private func fetchUsername(){
-        guard let uid = user?.uid else { return }
+        if let user = user {
+            updateUIData(user: user)
+        } else {
+            guard let uid = Auth.auth().currentUser?.uid else { return }
+            getUser(uid: uid) {[weak self] (user, error) in
+                if let error = error {
+                    print("error accured during fetch user naem: ", error.localizedDescription)
+                    return
+                }
+                
+                guard let self = self else { return }
+                self.updateUIData(user: user!)
+            }
+        }
+        
         // old code
-//        let refrance = Database.database().reference()
-//        refrance.child("users").child(uid).observeSingleEvent(of: .value, with: {[weak self] (snapshot) in
-//            guard let self = self else { return }
-//            guard let dic = snapshot.value as? [String : Any] else { return }
-//            self.user = User(dictionary: dic)
-//            self.navigationItem.title = self.user?.username
-//            self.collectionView.reloadData()
-//        }) { (error) in
-//            print("error accured during fetch user naem: ", error.localizedDescription)
-//        }
+        //        let refrance = Database.database().reference()
+        //        refrance.child("users").child(uid).observeSingleEvent(of: .value, with: {[weak self] (snapshot) in
+        //            guard let self = self else { return }
+        //            guard let dic = snapshot.value as? [String : Any] else { return }
+        //            self.user = User(dictionary: dic)
+        //            self.navigationItem.title = self.user?.username
+        //            self.collectionView.reloadData()
+        //        }) { (error) in
+        //            print("error accured during fetch user naem: ", error.localizedDescription)
+        //        }
         
         // new code
-        getUser(uid: uid) {[weak self] (user, error) in
-            if let error = error {
-                print("error accured during fetch user naem: ", error.localizedDescription)
-                return
-            }
-            
-            guard let self = self else { return }
-            self.user = user
-            self.navigationItem.title = self.user?.username
-            self.collectionView.reloadData()
-        }
+        
+    }
+    
+    private func updateUIData(user: User){
+        self.user = user
+        self.navigationItem.title = self.user?.username
+        self.collectionView.reloadData()
     }
     
     override func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
@@ -160,7 +170,7 @@ class UserProfileController: UICollectionViewController, UICollectionViewDelegat
     func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, referenceSizeForHeaderInSection section: Int) -> CGSize {
         return CGSize(width: view.frame.width, height: 200)
     }
-
+    
 }
 
 

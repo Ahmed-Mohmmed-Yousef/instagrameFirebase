@@ -28,6 +28,8 @@ class UserSearchController: UICollectionViewController, UICollectionViewDelegate
         super.viewDidLoad()
         collectionView.backgroundColor = .white
         collectionView.register(UserSearchCell.self, forCellWithReuseIdentifier: cellId)
+        collectionView.alwaysBounceVertical = true
+        collectionView.keyboardDismissMode = .onDrag
         setupUI()
         fetchUsers()
     }
@@ -101,6 +103,7 @@ class UserSearchController: UICollectionViewController, UICollectionViewDelegate
     
     override func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
         seachBar.isHidden = true
+        seachBar.resignFirstResponder()
         let selectedUser = seachBar.text?.isEmpty ?? true ? users[indexPath.row] : resultUsers[indexPath.row]
         let selectedUserPrfile = UserProfileController(collectionViewLayout: UICollectionViewFlowLayout())
         selectedUserPrfile.user = selectedUser
