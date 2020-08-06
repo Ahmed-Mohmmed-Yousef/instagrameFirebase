@@ -23,12 +23,28 @@ class HomeController: UICollectionViewController, UICollectionViewDelegateFlowLa
         setupNavigationBarItem()
         
         fetchPosts()
+        fetchFollowingUserIds()
     }
 
     private func setupNavigationBarItem(){
         let iv = UIImageView(image: #imageLiteral(resourceName: "insta"))
         iv.contentMode = .scaleAspectFit
         navigationItem.titleView = iv
+    }
+    
+    fileprivate func fetchFollowingUserIds(){
+        guard let currentUserId = Auth.auth().currentUser?.uid else { return }
+        let ref = Database.database().reference().child("following").child(currentUserId)
+        ref.observeSingleEvent(of: .value, with: { (snapsoht) in
+            guard let dic = snapsoht.value as? [String: Any] else {return}
+            dic.forEach { (key, value) in
+                getUser(uid: key) { (user, _) in
+                    self.fetchPostsWithUser(user: user!)
+                }
+            }
+        }) { (error) in
+            print(error.localizedDescription)
+        }
     }
     
     fileprivate func fetchPosts(){
@@ -56,6 +72,9 @@ class HomeController: UICollectionViewController, UICollectionViewDelegateFlowLa
                 self.posts.append(post)
             }
             
+            self.posts.sort { (p1, p2) -> Bool in
+                return p1.creationDate.compare(p2.creationDate) == .orderedDescending
+            }
             // complet fetching all user posts
             DispatchQueue.main.async {
                 self.collectionView.reloadData()

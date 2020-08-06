@@ -111,7 +111,14 @@ class HomePostCell: UICollectionViewCell {
         let attributedText = NSMutableAttributedString(string: post.user.username, attributes: [NSAttributedString.Key.font : UIFont.boldSystemFont(ofSize: 14)])
         attributedText.append(NSAttributedString(string: " \(post.caption)", attributes: [NSAttributedString.Key.font : UIFont.systemFont(ofSize: 14)]))
         attributedText.append(NSAttributedString(string: "\n\n", attributes: [NSAttributedString.Key.font : UIFont.systemFont(ofSize: 4)]))
-        attributedText.append(NSAttributedString(string: "1week ago", attributes: [NSAttributedString.Key.foregroundColor : UIColor.gray]))
+        
+        let formatter = RelativeDateTimeFormatter()
+        formatter.unitsStyle = .full
+
+        // get exampleDate relative to the current date
+        let relativeDate = formatter.localizedString(for: self.post!.creationDate, relativeTo: Date())
+        
+        attributedText.append(NSAttributedString(string: relativeDate , attributes: [NSAttributedString.Key.foregroundColor : UIColor.gray]))
         captionLabel.attributedText = attributedText
     }
     
