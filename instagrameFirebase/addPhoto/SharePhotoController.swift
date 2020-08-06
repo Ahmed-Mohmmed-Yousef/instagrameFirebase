@@ -88,6 +88,9 @@ class SharePhotoController: UIViewController {
             }
             print("Success to upload post")
             self.dismiss(animated: true)
+            
+           
+            NotificationCenter.default.post(name: HomeController.updateFeedNotificationName, object: nil )
         }
     }
     
@@ -100,6 +103,7 @@ class SharePhotoController: UIViewController {
         containerView.anchor(top: view.layoutMarginsGuide.topAnchor,
                              leading: view.leadingAnchor,
                              trailing: view.trailingAnchor,
+                             paddingTop: 8,
                              height: 100)
         
         containerView.addSubview(imageView)

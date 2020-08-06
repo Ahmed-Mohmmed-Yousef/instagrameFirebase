@@ -13,6 +13,7 @@ var numCall = 0
 class CustomImageView: UIImageView {
     
     func loadImage(urlString: String){
+        self.image = nil
         if let cachImage = imageCache[urlString] {
             self.image = cachImage
             numCall += 1

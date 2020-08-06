@@ -14,22 +14,44 @@ class HomeController: UICollectionViewController, UICollectionViewDelegateFlowLa
     
     var posts = [Post]()
     
+    static let updateFeedNotificationName = Notification.Name("Update Feed")
     override func viewDidLoad() {
         super.viewDidLoad()
+        
+        
+        NotificationCenter.default.addObserver(self, selector: #selector(handelUpdateFeed), name: HomeController.updateFeedNotificationName, object: nil)
         
         collectionView.backgroundColor = .white
         collectionView.register(HomePostCell.self, forCellWithReuseIdentifier: cellId)
         
-        setupNavigationBarItem()
+        let refredshControl = UIRefreshControl()
+        refredshControl.addTarget(self, action: #selector(handelRefresh), for: .valueChanged)
         
-        fetchPosts()
-        fetchFollowingUserIds()
+        collectionView.refreshControl = refredshControl
+        setupNavigationBarItem()
+        fetchAllPosts()
     }
 
     private func setupNavigationBarItem(){
         let iv = UIImageView(image: #imageLiteral(resourceName: "insta"))
         iv.contentMode = .scaleAspectFit
         navigationItem.titleView = iv
+    }
+    
+    @objc fileprivate func handelUpdateFeed(){
+        print("Update Feed notification")
+        handelRefresh()
+    }
+    
+    @objc fileprivate func handelRefresh(){
+        posts.removeAll()
+        self.collectionView.reloadData()
+        fetchAllPosts()
+    }
+    
+    fileprivate func fetchAllPosts() {
+        fetchPosts()
+        fetchFollowingUserIds()
     }
     
     fileprivate func fetchFollowingUserIds(){
@@ -65,6 +87,7 @@ class HomeController: UICollectionViewController, UICollectionViewDelegateFlowLa
     fileprivate func fetchPostsWithUser(user: User) {
         let ref = Database.database().reference().child("posts").child(user.uid)
         ref.observeSingleEvent(of: .value, with: { (snapshot) in
+            self.collectionView.refreshControl?.endRefreshing()
             guard let dics = snapshot.value as? [String: Any] else { return }
             dics.forEach { (key, value) in
                 guard let dic = value as? [String: Any] else {return}
@@ -76,9 +99,7 @@ class HomeController: UICollectionViewController, UICollectionViewDelegateFlowLa
                 return p1.creationDate.compare(p2.creationDate) == .orderedDescending
             }
             // complet fetching all user posts
-            DispatchQueue.main.async {
-                self.collectionView.reloadData()
-            }
+            self.collectionView.reloadData()
             
         }) { (error) in
             print("Error :" , error.localizedDescription)
