@@ -36,6 +36,15 @@ class HomeController: UICollectionViewController, UICollectionViewDelegateFlowLa
         let iv = UIImageView(image: #imageLiteral(resourceName: "insta"))
         iv.contentMode = .scaleAspectFit
         navigationItem.titleView = iv
+        
+        navigationItem.leftBarButtonItem = UIBarButtonItem(image: UIImage(systemName: "camera")?.withRenderingMode(.alwaysOriginal), style: .plain, target: self, action: #selector(handleCamera))
+    }
+    
+    @objc fileprivate func handleCamera(){
+        let cameraController = CameraController()
+        cameraController.modalPresentationStyle = .fullScreen
+        cameraController.modalTransitionStyle = .flipHorizontal
+        present(cameraController, animated: true)
     }
     
     @objc fileprivate func handelUpdateFeed(){

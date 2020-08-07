@@ -7,6 +7,7 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		2413D06024DD49B9000A1DA0 /* CameraController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2413D05F24DD49B9000A1DA0 /* CameraController.swift */; };
 		246C45C424D542B90059AE7B /* UserSearchController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 246C45C324D542B90059AE7B /* UserSearchController.swift */; };
 		246C45C624D558470059AE7B /* UserSearchCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 246C45C524D558470059AE7B /* UserSearchCell.swift */; };
 		248B7ABC2497A21A00B85E32 /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 248B7ABB2497A21A00B85E32 /* AppDelegate.swift */; };
@@ -34,6 +35,7 @@
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
+		2413D05F24DD49B9000A1DA0 /* CameraController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CameraController.swift; sourceTree = "<group>"; };
 		246C45C324D542B90059AE7B /* UserSearchController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UserSearchController.swift; sourceTree = "<group>"; };
 		246C45C524D558470059AE7B /* UserSearchCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UserSearchCell.swift; sourceTree = "<group>"; };
 		248B7AB82497A21A00B85E32 /* instagrameFirebase.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = instagrameFirebase.app; sourceTree = BUILT_PRODUCTS_DIR; };
@@ -76,6 +78,14 @@
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
+		2413D05E24DD4993000A1DA0 /* CameraController */ = {
+			isa = PBXGroup;
+			children = (
+				2413D05F24DD49B9000A1DA0 /* CameraController.swift */,
+			);
+			path = CameraController;
+			sourceTree = "<group>";
+		};
 		246C45C224D542800059AE7B /* Search */ = {
 			isa = PBXGroup;
 			children = (
@@ -106,6 +116,7 @@
 		248B7ABA2497A21A00B85E32 /* instagrameFirebase */ = {
 			isa = PBXGroup;
 			children = (
+				2413D05E24DD4993000A1DA0 /* CameraController */,
 				246C45C224D542800059AE7B /* Search */,
 				24D9F9ED24CB10DF00163F90 /* Models */,
 				24C726D724CD78AD0090403B /* HomeController */,
@@ -322,6 +333,7 @@
 				24D9F9EF24CB10F300163F90 /* Post.swift in Sources */,
 				246C45C424D542B90059AE7B /* UserSearchController.swift in Sources */,
 				24D30CD0249C0718004056B0 /* UserProfileController.swift in Sources */,
+				2413D06024DD49B9000A1DA0 /* CameraController.swift in Sources */,
 				248B7ABC2497A21A00B85E32 /* AppDelegate.swift in Sources */,
 				24D9F9AB24C9635D00163F90 /* SharePhotoController.swift in Sources */,
 				24C726D924CD78E10090403B /* HomeController.swift in Sources */,
