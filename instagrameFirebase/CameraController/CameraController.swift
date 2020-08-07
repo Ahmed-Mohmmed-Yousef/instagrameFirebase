@@ -26,6 +26,9 @@ class CameraController: UIViewController {
         btn.addTarget(self, action: #selector(handelCaptuer), for: .touchUpInside)
         return btn
     }()
+    
+    // output
+    let output = AVCapturePhotoOutput()
 
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -44,7 +47,11 @@ class CameraController: UIViewController {
     }
     
     @objc fileprivate func handelCaptuer(){
-         print("caputr")
+        let settings = AVCapturePhotoSettings()
+        guard let previewFromateType = settings.availablePreviewPhotoPixelFormatTypes.first else { return }
+        settings.previewPhotoFormat = [kCVPixelBufferPixelFormatTypeKey as String: previewFromateType]
+        output.capturePhoto(with: settings, delegate: self)
+
     }
     
     fileprivate func setupCaptureSession() {
@@ -65,7 +72,6 @@ class CameraController: UIViewController {
         
         //2. setup output
         
-        let output = AVCapturePhotoOutput()
         if captureSession.canAddOutput(output) {
             captureSession.addOutput(output)
         }
@@ -102,3 +108,14 @@ class CameraController: UIViewController {
     }
 
 }
+
+extension CameraController: AVCapturePhotoCaptureDelegate {
+    func photoOutput(_ output: AVCapturePhotoOutput, didFinishProcessingPhoto photo: AVCapturePhoto, error: Error?) {
+        guard let imageData = photo.fileDataRepresentation() else { return }
+        let previewImage = UIImage(data: imageData)
+        
+        print("finish ....")
+    }
+}
+
+
