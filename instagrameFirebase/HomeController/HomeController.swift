@@ -29,7 +29,7 @@ class HomeController: UICollectionViewController, UICollectionViewDelegateFlowLa
         
         collectionView.refreshControl = refredshControl
         setupNavigationBarItem()
-//        fetchAllPosts()
+        fetchAllPosts()
     }
 
     private func setupNavigationBarItem(){
@@ -122,6 +122,7 @@ class HomeController: UICollectionViewController, UICollectionViewDelegateFlowLa
     override func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
         let cell = collectionView.dequeueReusableCell(withReuseIdentifier: cellId, for: indexPath) as! HomePostCell
         cell.post = posts[indexPath.row]
+        cell.delegate = self
         return cell
     }
     
@@ -132,5 +133,13 @@ class HomeController: UICollectionViewController, UICollectionViewDelegateFlowLa
         height += 50 // height of buttons under image
         height += 60 // height of caption text
         return CGSize(width: view.frame.width, height: height)
+    }
+}
+
+extension HomeController: HomePostCellDelegate {
+    func didTapComment(post: Post) {
+        let commentController = CommentController(collectionViewLayout: UICollectionViewFlowLayout())
+        commentController.post = post
+        navigationController?.pushViewController(commentController, animated: true)
     }
 }

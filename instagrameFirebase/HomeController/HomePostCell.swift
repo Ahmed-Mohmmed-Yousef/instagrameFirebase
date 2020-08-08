@@ -7,9 +7,16 @@
 //
 
 import UIKit
+
+protocol HomePostCellDelegate {
+    func didTapComment(post: Post)
+}
+
+
 var numHomePostCell = 0
 class HomePostCell: UICollectionViewCell {
     
+    var delegate: HomePostCellDelegate?
     var post: Post? {
         didSet {
             guard let post = post else {return}
@@ -62,6 +69,7 @@ class HomePostCell: UICollectionViewCell {
         let btn = UIButton(type: .system)
         btn.setImage(UIImage(systemName: "bubble.right")?.withRenderingMode(.alwaysOriginal),
                      for: .normal)
+        btn.addTarget(self, action: #selector(handelComment), for: .touchUpInside)
         return btn
     }()
     
@@ -102,6 +110,11 @@ class HomePostCell: UICollectionViewCell {
     
     required init?(coder: NSCoder) {
         fatalError("init(coder:) has not been implemented")
+    }
+    
+    @objc fileprivate func handelComment(){
+        guard let post = self.post else { return }
+        delegate?.didTapComment(post: post)
     }
     
     private func setupAttributedCaption() {
