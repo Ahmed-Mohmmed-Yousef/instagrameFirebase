@@ -29,7 +29,7 @@ class HomeController: UICollectionViewController, UICollectionViewDelegateFlowLa
         
         collectionView.refreshControl = refredshControl
         setupNavigationBarItem()
-        fetchAllPosts()
+//        fetchAllPosts()
     }
 
     private func setupNavigationBarItem(){

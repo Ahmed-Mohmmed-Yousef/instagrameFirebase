@@ -41,6 +41,10 @@ class CameraController: UIViewController {
         setupDissmisButton()
     }
     
+    override var prefersStatusBarHidden: Bool {
+        return true
+    }
+    
     @objc fileprivate func handelDissmis(){
         self.dismiss(animated: true)
     
@@ -113,6 +117,14 @@ extension CameraController: AVCapturePhotoCaptureDelegate {
     func photoOutput(_ output: AVCapturePhotoOutput, didFinishProcessingPhoto photo: AVCapturePhoto, error: Error?) {
         guard let imageData = photo.fileDataRepresentation() else { return }
         let previewImage = UIImage(data: imageData)
+        let previewContainer = PreviewPhotoContainerView()
+        previewContainer.imageView.image = previewImage
+        view.addSubview(previewContainer)
+        previewContainer.anchor(top: view.topAnchor,
+                                leading: view.leadingAnchor,
+                                bottom: view.bottomAnchor,
+                                trailing: view.trailingAnchor)
+        
         
         print("finish ....")
     }

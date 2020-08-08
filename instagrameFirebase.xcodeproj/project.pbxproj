@@ -8,6 +8,7 @@
 
 /* Begin PBXBuildFile section */
 		2413D06024DD49B9000A1DA0 /* CameraController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2413D05F24DD49B9000A1DA0 /* CameraController.swift */; };
+		2413D0C524DEB0C2000A1DA0 /* PreviewPhotoContainerView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2413D0C424DEB0C2000A1DA0 /* PreviewPhotoContainerView.swift */; };
 		246C45C424D542B90059AE7B /* UserSearchController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 246C45C324D542B90059AE7B /* UserSearchController.swift */; };
 		246C45C624D558470059AE7B /* UserSearchCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 246C45C524D558470059AE7B /* UserSearchCell.swift */; };
 		248B7ABC2497A21A00B85E32 /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 248B7ABB2497A21A00B85E32 /* AppDelegate.swift */; };
@@ -36,6 +37,7 @@
 
 /* Begin PBXFileReference section */
 		2413D05F24DD49B9000A1DA0 /* CameraController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CameraController.swift; sourceTree = "<group>"; };
+		2413D0C424DEB0C2000A1DA0 /* PreviewPhotoContainerView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PreviewPhotoContainerView.swift; sourceTree = "<group>"; };
 		246C45C324D542B90059AE7B /* UserSearchController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UserSearchController.swift; sourceTree = "<group>"; };
 		246C45C524D558470059AE7B /* UserSearchCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UserSearchCell.swift; sourceTree = "<group>"; };
 		248B7AB82497A21A00B85E32 /* instagrameFirebase.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = instagrameFirebase.app; sourceTree = BUILT_PRODUCTS_DIR; };
@@ -82,6 +84,7 @@
 			isa = PBXGroup;
 			children = (
 				2413D05F24DD49B9000A1DA0 /* CameraController.swift */,
+				2413D0C424DEB0C2000A1DA0 /* PreviewPhotoContainerView.swift */,
 			);
 			path = CameraController;
 			sourceTree = "<group>";
@@ -340,6 +343,7 @@
 				24D9F9F324CB152E00163F90 /* User.swift in Sources */,
 				24D9F9F624CB2C8300163F90 /* CustomImageView.swift in Sources */,
 				24D9F9A324C72DF400163F90 /* PhotoSelectorHeader.swift in Sources */,
+				2413D0C524DEB0C2000A1DA0 /* PreviewPhotoContainerView.swift in Sources */,
 				249BDAB024C47708002E1C4E /* LoginController.swift in Sources */,
 				24D30CCE249C069C004056B0 /* MainTabBar.swift in Sources */,
 				24D9F9F124CB12E300163F90 /* UserProfilePhotoCell.swift in Sources */,
