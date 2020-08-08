@@ -43,7 +43,6 @@ class HomeController: UICollectionViewController, UICollectionViewDelegateFlowLa
     @objc fileprivate func handleCamera(){
         let cameraController = CameraController()
         cameraController.modalPresentationStyle = .fullScreen
-        cameraController.modalTransitionStyle = .flipHorizontal
         present(cameraController, animated: true)
     }
     

@@ -29,14 +29,18 @@ class CameraController: UIViewController {
     
     // output
     let output = AVCapturePhotoOutput()
+    // animated transition
+    let customAnimationPresentor = CustomAnimationPresentor()
+    let customAnimationDismisser = CustomAnimationDismisser()
+
 
     override func viewDidLoad() {
         super.viewDidLoad()
 
         // Do any additional setup after loading the view.
         view.backgroundColor = .systemPink
-        
-        setupCaptureSession()
+        transitioningDelegate = self
+//        setupCaptureSression()
         setupCapturePhotoButton()
         setupDissmisButton()
     }
@@ -127,6 +131,17 @@ extension CameraController: AVCapturePhotoCaptureDelegate {
         
         
         print("finish ....")
+    }
+}
+
+extension CameraController: UIViewControllerTransitioningDelegate {
+    
+    func animationController(forPresented presented: UIViewController, presenting: UIViewController, source: UIViewController) -> UIViewControllerAnimatedTransitioning? {
+        return customAnimationPresentor
+    }
+    
+    func animationController(forDismissed dismissed: UIViewController) -> UIViewControllerAnimatedTransitioning? {
+        return customAnimationDismisser
     }
 }
 
