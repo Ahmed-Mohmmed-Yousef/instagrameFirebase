@@ -10,10 +10,10 @@ import UIKit
 
 protocol HomePostCellDelegate {
     func didTapComment(post: Post)
+    func didTapLike(cell: HomePostCell)
 }
 
 
-var numHomePostCell = 0
 class HomePostCell: UICollectionViewCell {
     
     var delegate: HomePostCellDelegate?
@@ -23,6 +23,7 @@ class HomePostCell: UICollectionViewCell {
             photoIamgeView.loadImage(urlString: post.imageUrl)
             usernameLabel.text = post.user.username
 //            captionLabel.text = post.caption
+            likeButton.setImage(UIImage(systemName: post.liked ? "heart.fill" : "heart")?.withRenderingMode(.alwaysOriginal), for: .normal)
             setupAttributedCaption()
             userProfileImageView.loadImage(urlString: post.user.profileImageURL)
         }
@@ -62,6 +63,7 @@ class HomePostCell: UICollectionViewCell {
         let btn = UIButton(type: .system)
         btn.setImage(UIImage(systemName: "heart")?.withRenderingMode(.alwaysOriginal),
                      for: .normal)
+        btn.addTarget(self, action: #selector(habdelLike), for: .touchUpInside)
         return btn
     }()
     
@@ -110,6 +112,10 @@ class HomePostCell: UICollectionViewCell {
     
     required init?(coder: NSCoder) {
         fatalError("init(coder:) has not been implemented")
+    }
+    
+    @objc fileprivate func habdelLike(){
+        delegate?.didTapLike(cell: self)
     }
     
     @objc fileprivate func handelComment(){

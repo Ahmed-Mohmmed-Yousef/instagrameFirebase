@@ -10,13 +10,12 @@ import Foundation
 //import Firebase
 
 struct Post {
-    
     var id: String?
-    
     let user: User
     let imageUrl: String
     let caption: String
     let creationDate: Date
+    var liked = false
     
     init(user: User, dic: [String: Any]) {
         self.user = user
@@ -28,6 +27,8 @@ struct Post {
     }
 }
 
-func fetchPostWith(user: User){
-    
+extension Post: Equatable {
+    static func == (lhs: Post, rhs: Post) -> Bool {
+        lhs.id == rhs.id
+    }
 }
