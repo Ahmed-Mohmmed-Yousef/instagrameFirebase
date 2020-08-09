@@ -14,6 +14,7 @@
 		2413D0CB24DF0269000A1DA0 /* CommentController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2413D0CA24DF0269000A1DA0 /* CommentController.swift */; };
 		2413D0CD24DFE30E000A1DA0 /* Comment.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2413D0CC24DFE30E000A1DA0 /* Comment.swift */; };
 		2413D0CF24DFE5E7000A1DA0 /* UIViewController+Ext.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2413D0CE24DFE5E7000A1DA0 /* UIViewController+Ext.swift */; };
+		2413D0D124DFF345000A1DA0 /* CommentCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2413D0D024DFF345000A1DA0 /* CommentCell.swift */; };
 		246C45C424D542B90059AE7B /* UserSearchController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 246C45C324D542B90059AE7B /* UserSearchController.swift */; };
 		246C45C624D558470059AE7B /* UserSearchCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 246C45C524D558470059AE7B /* UserSearchCell.swift */; };
 		248B7ABC2497A21A00B85E32 /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 248B7ABB2497A21A00B85E32 /* AppDelegate.swift */; };
@@ -48,6 +49,7 @@
 		2413D0CA24DF0269000A1DA0 /* CommentController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CommentController.swift; sourceTree = "<group>"; };
 		2413D0CC24DFE30E000A1DA0 /* Comment.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Comment.swift; sourceTree = "<group>"; };
 		2413D0CE24DFE5E7000A1DA0 /* UIViewController+Ext.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "UIViewController+Ext.swift"; sourceTree = "<group>"; };
+		2413D0D024DFF345000A1DA0 /* CommentCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CommentCell.swift; sourceTree = "<group>"; };
 		246C45C324D542B90059AE7B /* UserSearchController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UserSearchController.swift; sourceTree = "<group>"; };
 		246C45C524D558470059AE7B /* UserSearchCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UserSearchCell.swift; sourceTree = "<group>"; };
 		248B7AB82497A21A00B85E32 /* instagrameFirebase.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = instagrameFirebase.app; sourceTree = BUILT_PRODUCTS_DIR; };
@@ -164,6 +166,7 @@
 			children = (
 				24C726D824CD78E10090403B /* HomeController.swift */,
 				2413D0CA24DF0269000A1DA0 /* CommentController.swift */,
+				2413D0D024DFF345000A1DA0 /* CommentCell.swift */,
 				24C726DA24CD7B130090403B /* HomePostCell.swift */,
 			);
 			path = HomeController;
@@ -369,6 +372,7 @@
 				248B7ABE2497A21A00B85E32 /* SceneDelegate.swift in Sources */,
 				24D9F9A124C7209900163F90 /* PhotoSelectorCell.swift in Sources */,
 				2413D0CF24DFE5E7000A1DA0 /* UIViewController+Ext.swift in Sources */,
+				2413D0D124DFF345000A1DA0 /* CommentCell.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

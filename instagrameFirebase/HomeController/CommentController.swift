@@ -9,11 +9,12 @@
 import UIKit
 import Firebase
 
-private let reuseIdentifier = "Cell"
+private let reuseIdentifier = "CommentCell"
 
-class CommentController: UICollectionViewController {
+class CommentController: UICollectionViewController, UICollectionViewDelegateFlowLayout {
     
     var post: Post?
+    var comments = [Comment]()
     
     private lazy var textField: UITextField = {
         let textField = UITextField()
@@ -57,9 +58,12 @@ class CommentController: UICollectionViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
         
-        
-        self.collectionView!.register(UICollectionViewCell.self, forCellWithReuseIdentifier: reuseIdentifier)
+        navigationItem.title = "Comment"
+        self.collectionView!.register(CommentCell.self, forCellWithReuseIdentifier: reuseIdentifier)
         collectionView.backgroundColor = .systemRed
+        collectionView.contentInset = UIEdgeInsets(top: 0, left: 0, bottom: 10, right: 0)
+        
+        fetchComment()
     }
     
     override func viewWillAppear(_ animated: Bool) {
@@ -82,7 +86,6 @@ class CommentController: UICollectionViewController {
         return true
     }
     
-    
     @objc fileprivate func handelSubmit(){
         guard let uid = Auth.auth().currentUser?.uid else { return }
         guard let postId = post?.id else { return }
@@ -104,13 +107,44 @@ class CommentController: UICollectionViewController {
             
             self.textField.text = ""
             self.textField.resignFirstResponder()
-            print("comment success")
         }
-        
-        
     }
     
+    //MARK:- Fetch comment
+    fileprivate func fetchComment() {
+        guard let postId = post?.id else { return }
+        let ref = Database.database().reference().child("comments").child(postId)
+        ref.observe(.childAdded, with: { (snapshot) in
+            let id = snapshot.key
+            guard let dic = snapshot.value as? [String: Any] else { return }
+            let comment = Comment(id: id, dictionary: dic)
+            self.comments.append(comment)
+            let indexPath = IndexPath(row: self.comments.count - 1, section: 0)
+            self.collectionView.insertItems(at: [indexPath])
+        }) { (error) in
+            self.showAlert(message: error.localizedDescription)
+        }
+    }
+    
+    //MARK:- CollectionView delegate
+    override func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
+        return comments.count
+    }
+    
+    override func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
+        let cell = collectionView.dequeueReusableCell(withReuseIdentifier: reuseIdentifier, for: indexPath) as! CommentCell
+        cell.comment = comments[indexPath.row]
+        return cell
+    }
+    
+    
+    //MARK:- UICollectionViewDelegateFlowLayout
+    func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, sizeForItemAt indexPath: IndexPath) -> CGSize {
+        return CGSize(width: view.frame.width, height: 50)
+    }
 }
+
+
 
 extension CommentController: UITextFieldDelegate {
     func textFieldShouldReturn(_ textField: UITextField) -> Bool {
