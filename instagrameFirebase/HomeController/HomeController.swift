@@ -99,7 +99,8 @@ class HomeController: UICollectionViewController, UICollectionViewDelegateFlowLa
             guard let dics = snapshot.value as? [String: Any] else { return }
             dics.forEach { (key, value) in
                 guard let dic = value as? [String: Any] else {return}
-                let post = Post(user: user, dic: dic)
+                var post = Post(user: user, dic: dic)
+                post.id = key
                 self.posts.append(post)
             }
             

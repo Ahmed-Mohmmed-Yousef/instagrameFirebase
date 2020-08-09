@@ -7,12 +7,22 @@
 //
 
 import UIKit
+import Firebase
 
 private let reuseIdentifier = "Cell"
 
 class CommentController: UICollectionViewController {
     
     var post: Post?
+    
+    private lazy var textField: UITextField = {
+        let textField = UITextField()
+        textField.placeholder = "Enter Comment"
+        textField.keyboardType = .alphabet
+        textField.returnKeyType = .done
+        textField.delegate = self
+        return textField
+    }()
     
     lazy var containerView: UIView = {
         let containerView = UIView()
@@ -32,8 +42,7 @@ class CommentController: UICollectionViewController {
                          paddingTrailing: -12,
                          width: 50)
         
-        let textField = UITextField()
-        textField.placeholder = "Enter Comment"
+        
         containerView.addSubview(textField)
         textField.anchor(top: containerView.topAnchor,
                          leading: containerView.leadingAnchor,
@@ -51,7 +60,6 @@ class CommentController: UICollectionViewController {
         
         self.collectionView!.register(UICollectionViewCell.self, forCellWithReuseIdentifier: reuseIdentifier)
         collectionView.backgroundColor = .systemRed
-        print(post?.caption)
     }
     
     override func viewWillAppear(_ animated: Bool) {
@@ -74,8 +82,39 @@ class CommentController: UICollectionViewController {
         return true
     }
     
+    
     @objc fileprivate func handelSubmit(){
-        print("Sunccc")
+        guard let uid = Auth.auth().currentUser?.uid else { return }
+        guard let postId = post?.id else { return }
+        guard let text = textField.text, !text.isEmpty else {
+            self.textField.resignFirstResponder()
+            return
+        }
+        let date = Date().timeIntervalSince1970
+        let value: [String : Any] = ["uid": uid,
+                                     "creationDate": date,
+                                     "text": text]
+        
+        let ref = Database.database().reference().child("comments").child(postId).childByAutoId()
+        ref.updateChildValues(value) { (error, ref) in
+            if let error = error {
+                self.showAlert(message: error.localizedDescription)
+                return
+            }
+            
+            self.textField.text = ""
+            self.textField.resignFirstResponder()
+            print("comment success")
+        }
+        
+        
     }
     
+}
+
+extension CommentController: UITextFieldDelegate {
+    func textFieldShouldReturn(_ textField: UITextField) -> Bool {
+        self.handelSubmit()
+        return true
+    }
 }
