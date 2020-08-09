@@ -14,6 +14,9 @@ class CommentCell: UICollectionViewCell {
         didSet {
             guard let comment = comment else { return }
             textLbl.text = comment.text
+            self.photoImageView.loadImage(urlString: comment.user.profileImageURL)
+            self.setupAttributedCaption()
+            
         }
     }
     
@@ -24,9 +27,17 @@ class CommentCell: UICollectionViewCell {
         return lbl
     }()
     
+    private var photoImageView: CustomImageView = {
+        let iv = CustomImageView()
+        iv.contentMode = .scaleAspectFill
+        iv.backgroundColor = .systemGray4
+        return iv
+    }()
+    
     override init(frame: CGRect) {
-        super.init(frame: frame)
-        backgroundColor = .systemYellow
+        super.init(frame: frame)        
+        addSubViews(views: textLbl,
+                    photoImageView)
         setupUI()
     }
     
@@ -34,10 +45,17 @@ class CommentCell: UICollectionViewCell {
         fatalError("init(coder:) has not been implemented")
     }
     
+    private func setupAttributedCaption() {
+        guard let comment = comment else { return }
+        let attributedText = NSMutableAttributedString(string: comment.user.username, attributes: [NSAttributedString.Key.font : UIFont.boldSystemFont(ofSize: 14)])
+        attributedText.append(NSAttributedString(string: " \(comment.text)", attributes: [NSAttributedString.Key.font : UIFont.systemFont(ofSize: 14)]))
+        attributedText.append(NSAttributedString(string: "\n\n", attributes: [NSAttributedString.Key.font : UIFont.systemFont(ofSize: 4)]))
+        textLbl.attributedText = attributedText
+    }
+    
     fileprivate func setupTextLbl(){
-        addSubview(textLbl)
         textLbl.anchor(top: topAnchor,
-                       leading: leadingAnchor,
+                       leading: photoImageView.trailingAnchor,
                        bottom: bottomAnchor,
                        trailing: trailingAnchor,
                        paddingTop: 4,
@@ -46,7 +64,20 @@ class CommentCell: UICollectionViewCell {
                        paddingTrailing: -4)
     }
     
+    fileprivate func setupPhotoImageView(){
+        photoImageView.anchor(top: topAnchor,
+                              leading: leadingAnchor,
+                              paddingTop: 8,
+                              paddingLeading: 8,
+                              width: 40,
+                              height: 40)
+        photoImageView.layer.cornerRadius = 40 / 2
+        photoImageView.clipsToBounds = true
+        
+    }
+    
     fileprivate func setupUI(){
         setupTextLbl()
+        setupPhotoImageView()
     }
 }

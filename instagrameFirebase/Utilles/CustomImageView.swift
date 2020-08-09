@@ -9,15 +9,13 @@
 import UIKit
 
 var imageCache = [String: UIImage]()
-var numCall = 0
 class CustomImageView: UIImageView {
     
     func loadImage(urlString: String){
         self.image = nil
         if let cachImage = imageCache[urlString] {
             self.image = cachImage
-            numCall += 1
-//            print("from image cache ", numCall)
+//            print("find rimager")
             return
         }
         guard let url = URL(string: urlString) else { return }

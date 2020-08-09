@@ -19,7 +19,6 @@ class CommentController: UICollectionViewController, UICollectionViewDelegateFlo
     private lazy var textField: UITextField = {
         let textField = UITextField()
         textField.placeholder = "Enter Comment"
-        textField.keyboardType = .alphabet
         textField.returnKeyType = .done
         textField.delegate = self
         return textField
@@ -51,6 +50,13 @@ class CommentController: UICollectionViewController, UICollectionViewDelegateFlo
                          trailing: submitBtn.leadingAnchor,
                          paddingLeading: 12,
                          paddingTrailing: -8)
+        let lineSperatorView = UIView()
+        containerView.addSubview(lineSperatorView)
+        lineSperatorView.backgroundColor = .rgb(red: 230, green: 230, blue: 230)
+        lineSperatorView.anchor(top: containerView.topAnchor,
+                                leading: containerView.leadingAnchor,
+                                trailing: containerView.trailingAnchor,
+                                height: 0.5)
         
         return containerView
     }()
@@ -60,8 +66,10 @@ class CommentController: UICollectionViewController, UICollectionViewDelegateFlo
         
         navigationItem.title = "Comment"
         self.collectionView!.register(CommentCell.self, forCellWithReuseIdentifier: reuseIdentifier)
-        collectionView.backgroundColor = .systemRed
+        collectionView.backgroundColor = .systemGroupedBackground
         collectionView.contentInset = UIEdgeInsets(top: 0, left: 0, bottom: 10, right: 0)
+        collectionView.alwaysBounceVertical = true
+        collectionView.keyboardDismissMode = .interactive
         
         fetchComment()
     }
@@ -117,10 +125,16 @@ class CommentController: UICollectionViewController, UICollectionViewDelegateFlo
         ref.observe(.childAdded, with: { (snapshot) in
             let id = snapshot.key
             guard let dic = snapshot.value as? [String: Any] else { return }
-            let comment = Comment(id: id, dictionary: dic)
-            self.comments.append(comment)
-            let indexPath = IndexPath(row: self.comments.count - 1, section: 0)
-            self.collectionView.insertItems(at: [indexPath])
+            guard let uid = dic["uid"] as? String else { return }
+            getUser(uid: uid) { (user, _) in
+                guard let user = user else { return }
+                let comment = Comment(id: id, user: user, dictionary: dic)
+                self.comments.append(comment)
+                let indexPath = IndexPath(row: self.comments.count - 1, section: 0)
+                self.collectionView.insertItems(at: [indexPath])
+                self.collectionView.scrollToItem(at: indexPath, at: .bottom, animated: true)
+            }
+            
         }) { (error) in
             self.showAlert(message: error.localizedDescription)
         }
@@ -134,14 +148,27 @@ class CommentController: UICollectionViewController, UICollectionViewDelegateFlo
     override func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
         let cell = collectionView.dequeueReusableCell(withReuseIdentifier: reuseIdentifier, for: indexPath) as! CommentCell
         cell.comment = comments[indexPath.row]
+        print(indexPath.row)
         return cell
     }
     
     
     //MARK:- UICollectionViewDelegateFlowLayout
     func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, sizeForItemAt indexPath: IndexPath) -> CGSize {
-        return CGSize(width: view.frame.width, height: 50)
+        let frame = CGRect(x: 0, y: 0, width: view.frame.width, height: 50)
+        let dummyCell = CommentCell(frame: frame)
+        dummyCell.comment = comments[indexPath.row]
+        dummyCell.layoutIfNeeded()
+        let target = CGSize(width: view.frame.width, height: 1000)
+        let estimatedSize = dummyCell.systemLayoutSizeFitting(target)
+        let height = max(40 + 8 + 8, estimatedSize.height)
+        return CGSize(width: view.frame.width, height: height)
     }
+    
+    func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, minimumLineSpacingForSectionAt section: Int) -> CGFloat {
+        return 0
+    }
+    
 }
 
 
