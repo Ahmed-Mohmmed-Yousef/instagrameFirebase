@@ -11,6 +11,12 @@ import Firebase
 
 class SharePhotoController: UIViewController {
     
+    private lazy var spinner: SpinnerViewController = {
+        let indic = SpinnerViewController()
+        indic.modalPresentationStyle = .overCurrentContext
+        return indic
+    }()
+    
     var selectedImage: UIImage?{
         didSet {
             imageView.image = selectedImage
@@ -46,6 +52,7 @@ class SharePhotoController: UIViewController {
     }
     
     @objc private func handelShare(){
+        self.showSpinner()
         navigationItem.rightBarButtonItem?.isEnabled = false
         
         guard let image = selectedImage else { return }
@@ -55,7 +62,9 @@ class SharePhotoController: UIViewController {
         referance.putData(uploadData, metadata: nil) { (metaData, error) in
             if let error = error {
                 self.navigationItem.rightBarButtonItem?.isEnabled = true
-                print("Failed to uplaod image: ", error.localizedDescription)
+                self.removeSpinner {
+                    self.showAlert(message: error.localizedDescription)
+                }
                 return
             }
             
@@ -82,15 +91,17 @@ class SharePhotoController: UIViewController {
         
         ref.updateChildValues(values) { (error, referance) in
             if let error = error {
-                self.navigationItem.rightBarButtonItem?.isEnabled = true
-                print("Failed to save in DB: ", error.localizedDescription)
+                self.removeSpinner {
+                    self.showAlert(message: error.localizedDescription)
+                }
                 return
             }
-            print("Success to upload post")
-            self.dismiss(animated: true)
             
+            self.removeSpinner {
+                self.dismiss(animated: true)
+                 NotificationCenter.default.post(name: HomeController.updateFeedNotificationName, object: nil )
+            }
            
-            NotificationCenter.default.post(name: HomeController.updateFeedNotificationName, object: nil )
         }
     }
     
@@ -125,6 +136,16 @@ class SharePhotoController: UIViewController {
                         paddingBottom: -4,
                         paddingTrailing: -4)
         
+    }
+    
+    //MARK:- Spinner func
+    fileprivate func showSpinner(){
+        view.endEditing(true)
+        self.present(spinner, animated: true)
+    }
+    
+    fileprivate func removeSpinner(completion: (()-> Void)? = nil){
+        self.spinner.dismiss(animated: true, completion: completion)
     }
 
 }

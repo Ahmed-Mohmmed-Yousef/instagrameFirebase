@@ -11,6 +11,13 @@ import Firebase
 
 class SignUpViewController: UIViewController {
     
+    lazy var spinner: SpinnerViewController = {
+        let indic = SpinnerViewController()
+        indic.modalPresentationStyle = .overCurrentContext
+        return indic
+    }()
+    
+    
     private lazy var plusPhotoImge: UIImageView = {
         let imgView = UIImageView(image: UIImage(systemName: "person.crop.square.fill"))
         imgView.tintColor = .systemBlue
@@ -85,7 +92,7 @@ class SignUpViewController: UIViewController {
         return btn
     }()
     
-
+    
     override func viewDidLoad() {
         super.viewDidLoad()
         view.backgroundColor = .white
@@ -116,6 +123,7 @@ class SignUpViewController: UIViewController {
     
     
     @objc private func signUpTapped(){
+        self.showSpinner()
         guard let email = emailField.text, !email.isEmpty else { return }
         guard let password = passwordField.text, !password.isEmpty else { return }
         guard let username = usernameField.text, !username.isEmpty else { return }
@@ -124,7 +132,9 @@ class SignUpViewController: UIViewController {
         /// create new account
         Auth.auth().createUser(withEmail: email, password: password) { (auth, error) in
             if let error = error {
-                print("Fields to create new account: \(error.localizedDescription)")
+                self.removeSpinner{
+                    self.showAlert(message: error.localizedDescription)
+                }
                 return
             }
             guard let uid = auth?.user.uid else { return }
@@ -137,12 +147,16 @@ class SignUpViewController: UIViewController {
             let referance = Storage.storage().reference().child("images/\(uid)_profile_picture.png")
             referance.putData(uploadData, metadata: nil) { (metaData, error) in
                 if let error = error {
-                    print("Fields to upload profile picture: \(error.localizedDescription)")
+                    self.removeSpinner{
+                        self.showAlert(message: error.localizedDescription)
+                    }
                     return
                 }
                 referance.downloadURL { (url, error) in
                     guard let url = url?.absoluteString, error == nil else {
-                        print("Cant get profile picture URL: \(error!.localizedDescription)")
+                        self.removeSpinner{
+                            self.showAlert(message: error!.localizedDescription)
+                        }
                         return
                     }
                     print("Success Upload profile picture to Storage url: \(url)")
@@ -153,7 +167,9 @@ class SignUpViewController: UIViewController {
                     /// save user info in firebase database
                     Database.database().reference().child("users").updateChildValues(value) { (error, referance) in
                         if error != nil {
-                            print("Fiald to save user info to db")
+                            self.removeSpinner{
+                                self.showAlert(message: error!.localizedDescription)
+                            }
                             return
                         }
                         
@@ -161,6 +177,7 @@ class SignUpViewController: UIViewController {
                         
                         guard let mainTabBarController = UIApplication.shared.keyWindow?.rootViewController as? MainTabBar else { return }
                         mainTabBarController.setViewControllers()
+                        self.removeSpinner()
                         self.dismiss(animated: true )
                     }
                 }
@@ -178,8 +195,8 @@ class SignUpViewController: UIViewController {
         pickerVC.allowsEditing = true
         present(pickerVC, animated: true)
     }
-
-
+    
+    
     private func setupPlusPhoto(){
         plusPhotoImge.anchor(top: view.safeAreaLayoutGuide.topAnchor,
                              paddingTop: 40,
@@ -226,7 +243,16 @@ class SignUpViewController: UIViewController {
         setupInputFields()
         setupSignInBtn()
     }
-
+    
+    fileprivate func showSpinner(){
+        view.endEditing(true)
+        self.present(spinner, animated: true)
+    }
+    
+    fileprivate func removeSpinner(completion: (()-> Void)? = nil){
+        self.spinner.dismiss(animated: true, completion: completion)
+    }
+    
 }
 
 extension SignUpViewController: UIImagePickerControllerDelegate, UINavigationControllerDelegate {

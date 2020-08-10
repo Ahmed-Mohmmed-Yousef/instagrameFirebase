@@ -9,6 +9,11 @@
 import UIKit
 import Firebase
 
+protocol UserProfileHeaderDelegate {
+    func didTapGrid()
+    func didTapList()
+}
+
 class UserProfileHeader: UICollectionViewCell {
     
     var user: User? {
@@ -20,6 +25,8 @@ class UserProfileHeader: UICollectionViewCell {
             setupEditFollowButton()
         }
     }
+    
+    var delegate : UserProfileHeaderDelegate?
     
     private lazy var profileImageView: CustomImageView = {
         let iv = CustomImageView()
@@ -38,13 +45,15 @@ class UserProfileHeader: UICollectionViewCell {
     private lazy var gridButton: UIButton = {
         let btn = UIButton(type: .system)
         btn.setImage(UIImage(systemName: "square.grid.3x2.fill"), for: .normal)
-        
+        btn.addTarget(self, action: #selector(handelGrid), for: .touchUpInside)
+        btn.tintColor = .mainBlue()
         return btn
     }()
     
     private lazy var listButton: UIButton = {
         let btn = UIButton(type: .system)
         btn.setImage(UIImage(systemName: "rectangle.grid.1x2"), for: .normal)
+        btn.addTarget(self, action: #selector(handelList), for: .touchUpInside)
         btn.tintColor = .init(white: 0, alpha: 0.2)
         return btn
     }()
@@ -166,7 +175,7 @@ class UserProfileHeader: UICollectionViewCell {
                 }
                 self.updateFolowButton(isFollow: false)
             }
-        } else {
+        } else if editProfileFollowButton.titleLabel?.text == "Follow" {
             // follow
             let ref = Database.database().reference().child("following").child(currentUserId)
             let value = [userId: 1]
@@ -177,7 +186,22 @@ class UserProfileHeader: UICollectionViewCell {
                 }
                 self.updateFolowButton(isFollow: true)
             }
+        } else {
+            // edit profile
+            print("Edit profile")
         }
+    }
+    
+    @objc fileprivate func handelGrid() {
+        gridButton.tintColor = .mainBlue()
+        listButton.tintColor = .init(white: 0, alpha: 0.2)
+        delegate?.didTapGrid()
+    }
+    
+    @objc fileprivate func handelList() {
+        listButton.tintColor = .mainBlue()
+        gridButton.tintColor = .init(white: 0, alpha: 0.2)
+        delegate?.didTapList()
     }
     
     fileprivate func updateFolowButton(isFollow: Bool) {
@@ -185,7 +209,6 @@ class UserProfileHeader: UICollectionViewCell {
         self.editProfileFollowButton.backgroundColor = isFollow ?.white : .rgb(red: 17, green: 154, blue: 237)
         self.editProfileFollowButton.setTitleColor(isFollow ? .black : .white, for: .normal)
         self.editProfileFollowButton.layer.borderColor = UIColor(white: 0, alpha: 0.2).cgColor
-        print(isFollow ? "Follow" : "Unfollow")
     }
     
     

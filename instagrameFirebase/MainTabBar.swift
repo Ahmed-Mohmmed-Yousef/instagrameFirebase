@@ -65,11 +65,11 @@ class MainTabBar: UITabBarController, UITabBarControllerDelegate {
         let userProfileNavController = templetNavController(image: UIImage(systemName: "person")!, selectedImage: UIImage(systemName: "person.fill")!, rooteViewController: userProfileController)
         
         tabBar.tintColor = .black
-        viewControllers = [homeController,
+        viewControllers = [userProfileNavController,
                            searchController,
                            plusController,
                            likeController,
-                           userProfileNavController]
+                           homeController]
         
         if let items = tabBar.items {
             for item in items {

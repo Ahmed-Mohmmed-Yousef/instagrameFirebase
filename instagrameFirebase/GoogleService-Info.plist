@@ -3,21 +3,21 @@
 <plist version="1.0">
 <dict>
 	<key>CLIENT_ID</key>
-	<string>395072802220-ab6i7dfhe773gma4387lk4k05lceqd3j.apps.googleusercontent.com</string>
+	<string>271163960914-tof2m0becrajfm6gugbi2mrgg3d50eje.apps.googleusercontent.com</string>
 	<key>REVERSED_CLIENT_ID</key>
-	<string>com.googleusercontent.apps.395072802220-ab6i7dfhe773gma4387lk4k05lceqd3j</string>
+	<string>com.googleusercontent.apps.271163960914-tof2m0becrajfm6gugbi2mrgg3d50eje</string>
 	<key>API_KEY</key>
-	<string>AIzaSyCau3uY_P6OHreYpq_sJT25vYVEkDpzItk</string>
+	<string>AIzaSyDLo7j2L_Z9ZyDde8DdPl1DSdhHMlGnjhE</string>
 	<key>GCM_SENDER_ID</key>
-	<string>395072802220</string>
+	<string>271163960914</string>
 	<key>PLIST_VERSION</key>
 	<string>1</string>
 	<key>BUNDLE_ID</key>
 	<string>com.myproject.instagrameFirebase</string>
 	<key>PROJECT_ID</key>
-	<string>myfirstfirebase-ae3c7</string>
+	<string>realtimwchat</string>
 	<key>STORAGE_BUCKET</key>
-	<string>myfirstfirebase-ae3c7.appspot.com</string>
+	<string>realtimwchat.appspot.com</string>
 	<key>IS_ADS_ENABLED</key>
 	<false></false>
 	<key>IS_ANALYTICS_ENABLED</key>
@@ -29,8 +29,8 @@
 	<key>IS_SIGNIN_ENABLED</key>
 	<true></true>
 	<key>GOOGLE_APP_ID</key>
-	<string>1:395072802220:ios:bcafc55d9fa02981917e09</string>
+	<string>1:271163960914:ios:ee922163b763f96c60398b</string>
 	<key>DATABASE_URL</key>
-	<string>https://myfirstfirebase-ae3c7.firebaseio.com</string>
+	<string>https://realtimwchat.firebaseio.com</string>
 </dict>
 </plist>

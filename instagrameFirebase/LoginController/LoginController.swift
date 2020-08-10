@@ -11,6 +11,12 @@ import Firebase
 
 class LoginController: UIViewController {
     
+    private lazy var spinner: SpinnerViewController = {
+        let indic = SpinnerViewController()
+        indic.modalPresentationStyle = .overCurrentContext
+        return indic
+    }()
+    
     private var logoImageView: UIImageView = {
         let img = UIImageView(image: UIImage(named: "insta"))
         img.contentMode = .scaleAspectFit
@@ -81,12 +87,15 @@ class LoginController: UIViewController {
     }
     
     @objc private func signInTapped(){
+        self.showSpinner()
         guard let email = emailField.text else { return }
         guard let password = passwordField.text else { return }
         
         Auth.auth().signIn(withEmail: email, password: password) { (result, error) in
             if let error = error {
-                print("Failed to sign in with email: ", error.localizedDescription)
+                self.removeSpinner {
+                    self.showAlert(message: error.localizedDescription)
+                }
                 return
             }
             
@@ -94,6 +103,7 @@ class LoginController: UIViewController {
             
             guard let mainTabBarController = UIApplication.shared.keyWindow?.rootViewController as? MainTabBar else { return }
             mainTabBarController.setViewControllers()
+            self.removeSpinner()
             self.dismiss(animated: true )
         }
         
@@ -153,6 +163,15 @@ class LoginController: UIViewController {
         setupSignUpBtn()
         setupLogoImageView()
         setupInputFields()
+    }
+    
+    fileprivate func showSpinner(){
+        view.endEditing(true)
+        self.present(spinner, animated: true)
+    }
+    
+    fileprivate func removeSpinner(completion: (()-> Void)? = nil){
+        self.spinner.dismiss(animated: true, completion: completion)
     }
     
 
