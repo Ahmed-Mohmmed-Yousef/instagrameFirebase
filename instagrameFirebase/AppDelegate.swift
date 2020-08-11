@@ -8,15 +8,54 @@
 
 import UIKit
 import Firebase
+import UserNotifications
+
 @UIApplicationMain
-class AppDelegate: UIResponder, UIApplicationDelegate {
+class AppDelegate: UIResponder, UIApplicationDelegate, MessagingDelegate, UNUserNotificationCenterDelegate {
 
     var window: UIWindow?
 
     func application(_ application: UIApplication, didFinishLaunchingWithOptions launchOptions: [UIApplication.LaunchOptionsKey: Any]?) -> Bool {
         FirebaseApp.configure()
         
+        registerForNotification(application: application)
+        
         return true
+    }
+    
+    func application(_ application: UIApplication, didRegisterForRemoteNotificationsWithDeviceToken deviceToken: Data) {
+        print("Register for notification", deviceToken)
+    }
+    
+    func messaging(_ messaging: Messaging, didReceiveRegistrationToken fcmToken: String) {
+        print("Register with FCM token:", fcmToken)
+    }
+    
+    func userNotificationCenter(_ center: UNUserNotificationCenter, willPresent notification: UNNotification, withCompletionHandler completionHandler: @escaping (UNNotificationPresentationOptions) -> Void) {
+        completionHandler(.alert)
+    }
+    
+    private func registerForNotification(application: UIApplication) {
+        print("registerForNotification")
+        
+        Messaging.messaging().delegate = self
+        UNUserNotificationCenter.current().delegate = self
+        // user notification auth
+        let options: UNAuthorizationOptions = [.alert, .badge, .sound]
+        UNUserNotificationCenter.current().requestAuthorization(options: options) { (grandted, error) in
+            if let error = error {
+                print("failed to request auth", error.localizedDescription)
+                return
+            }
+            
+            if grandted {
+                print("Auth granted.")
+            } else {
+                print("Auth denaide.")
+            }
+        }
+        
+        application.registerForRemoteNotifications()
     }
 
     // MARK: UISceneSession Lifecycle
