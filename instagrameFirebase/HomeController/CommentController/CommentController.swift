@@ -9,6 +9,89 @@
 import UIKit
 import Firebase
 
+protocol CommentInputAccessoryViewDelegate {
+    func handelSubmit(text: String)
+}
+
+class CommentInputAccessoryView: UIView {
+    
+    var delegate: CommentInputAccessoryViewDelegate?
+    
+    private lazy var submitBtn: UIButton = {
+        let submitBtn = UIButton(type: .system)
+        submitBtn.addTarget(self, action: #selector(handelSubmit), for: .touchUpInside)
+        submitBtn.setTitle("Submit", for: .normal)
+        submitBtn.setTitleColor(.black, for: .normal)
+        submitBtn.titleLabel?.font = UIFont.boldSystemFont(ofSize: 14)
+        return submitBtn
+    }()
+    
+     lazy var textView: UITextView = {
+        let tv = UITextView()
+        tv.isScrollEnabled = false
+        tv.text = "type here"
+        tv.font = UIFont.systemFont(ofSize: 18)
+//        tv.contentMode =
+        return tv
+    }()
+    
+    override init(frame: CGRect) {
+        super.init(frame: frame)
+        autoresizingMask = .flexibleHeight
+        addSubview(submitBtn)
+        addSubview(textView)
+        setupSubmitBtn()
+        setupTextFiled()
+        setupLineSperatorView()
+    }
+    
+    required init?(coder: NSCoder) {
+        fatalError("init(coder:) has not been implemented")
+    }
+    
+    override var intrinsicContentSize: CGSize {
+        return .zero
+    }
+    
+    @objc fileprivate func handelSubmit(){
+        self.textView.resignFirstResponder()
+        if let text = textView.text, !text.isEmpty{
+            delegate?.handelSubmit(text: text)
+        }
+        
+    }
+    
+    fileprivate func setupSubmitBtn(){
+        submitBtn.anchor(top: topAnchor,
+                         trailing: trailingAnchor,
+                         paddingTrailing: -12,
+                         width: 50,
+                         height: 50)
+    }
+    
+    fileprivate func setupTextFiled(){
+        textView.anchor(top: topAnchor,
+                         leading: leadingAnchor,
+                         bottom: safeAreaLayoutGuide.bottomAnchor,
+                         trailing: submitBtn.leadingAnchor,
+                         paddingTop: 8,
+                         paddingLeading: 12,
+                         paddingBottom: -8,
+                         paddingTrailing: -8)
+    }
+    
+    fileprivate func setupLineSperatorView(){
+        let lineSperatorView = UIView()
+        addSubview(lineSperatorView)
+        lineSperatorView.backgroundColor = .rgb(red: 230, green: 230, blue: 230)
+        lineSperatorView.anchor(top: topAnchor,
+                                leading: leadingAnchor,
+                                trailing: trailingAnchor,
+                                height: 0.5)
+    }
+}
+
+
 private let reuseIdentifier = "CommentCell"
 
 class CommentController: UICollectionViewController, UICollectionViewDelegateFlowLayout {
@@ -20,44 +103,15 @@ class CommentController: UICollectionViewController, UICollectionViewDelegateFlo
         let textField = UITextField()
         textField.placeholder = "Enter Comment"
         textField.returnKeyType = .done
-        textField.delegate = self
+        //        textField.delegate = self
         return textField
     }()
     
-    lazy var containerView: UIView = {
-        let containerView = UIView()
-        
+    lazy var containerView: CommentInputAccessoryView = {
+        let containerView = CommentInputAccessoryView()
         containerView.backgroundColor = .white
-        containerView.frame = CGRect(x: 0, y: 0, width: 100, height: 50)
-        
-        let submitBtn = UIButton(type: .system)
-        submitBtn.addTarget(self, action: #selector(handelSubmit), for: .touchUpInside)
-        submitBtn.setTitle("Submit", for: .normal)
-        submitBtn.setTitleColor(.black, for: .normal)
-        submitBtn.titleLabel?.font = UIFont.boldSystemFont(ofSize: 14)
-        containerView.addSubview(submitBtn)
-        submitBtn.anchor(top: containerView.topAnchor,
-                         bottom: containerView.bottomAnchor,
-                         trailing: containerView.trailingAnchor,
-                         paddingTrailing: -12,
-                         width: 50)
-        
-        
-        containerView.addSubview(textField)
-        textField.anchor(top: containerView.topAnchor,
-                         leading: containerView.leadingAnchor,
-                         bottom: containerView.bottomAnchor,
-                         trailing: submitBtn.leadingAnchor,
-                         paddingLeading: 12,
-                         paddingTrailing: -8)
-        let lineSperatorView = UIView()
-        containerView.addSubview(lineSperatorView)
-        lineSperatorView.backgroundColor = .rgb(red: 230, green: 230, blue: 230)
-        lineSperatorView.anchor(top: containerView.topAnchor,
-                                leading: containerView.leadingAnchor,
-                                trailing: containerView.trailingAnchor,
-                                height: 0.5)
-        
+        containerView.frame = CGRect(x: 0, y: 0, width: 50, height: 90)
+        containerView.delegate = self
         return containerView
     }()
     
@@ -90,33 +144,13 @@ class CommentController: UICollectionViewController, UICollectionViewDelegateFlo
         }
     }
     
+    
+    
     override var canBecomeFirstResponder: Bool {
         return true
     }
     
-    @objc fileprivate func handelSubmit(){
-        guard let uid = Auth.auth().currentUser?.uid else { return }
-        guard let postId = post?.id else { return }
-        guard let text = textField.text, !text.isEmpty else {
-            self.textField.resignFirstResponder()
-            return
-        }
-        let date = Date().timeIntervalSince1970
-        let value: [String : Any] = ["uid": uid,
-                                     "creationDate": date,
-                                     "text": text]
-        
-        let ref = Database.database().reference().child("comments").child(postId).childByAutoId()
-        ref.updateChildValues(value) { (error, ref) in
-            if let error = error {
-                self.showAlert(message: error.localizedDescription)
-                return
-            }
-            
-            self.textField.text = ""
-            self.textField.resignFirstResponder()
-        }
-    }
+    
     
     //MARK:- Fetch comment
     fileprivate func fetchComment() {
@@ -170,11 +204,25 @@ class CommentController: UICollectionViewController, UICollectionViewDelegateFlo
     
 }
 
-
-
-extension CommentController: UITextFieldDelegate {
-    func textFieldShouldReturn(_ textField: UITextField) -> Bool {
-        self.handelSubmit()
-        return true
+extension CommentController: CommentInputAccessoryViewDelegate{
+    func handelSubmit(text: String){
+        guard let uid = Auth.auth().currentUser?.uid else { return }
+        guard let postId = post?.id else { return }
+        
+        let date = Date().timeIntervalSince1970
+        let value: [String : Any] = ["uid": uid,
+                                     "creationDate": date,
+                                     "text": text]
+        
+        let ref = Database.database().reference().child("comments").child(postId).childByAutoId()
+        ref.updateChildValues(value) { (error, ref) in
+            if let error = error {
+                self.showAlert(message: error.localizedDescription)
+                return
+            }
+            self.containerView.textView.text = ""
+        }
     }
 }
+
+

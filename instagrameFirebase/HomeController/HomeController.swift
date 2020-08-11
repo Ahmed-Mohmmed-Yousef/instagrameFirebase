@@ -33,9 +33,10 @@ class HomeController: UICollectionViewController, UICollectionViewDelegateFlowLa
     }
 
     private func setupNavigationBarItem(){
-        let iv = UIImageView(image: #imageLiteral(resourceName: "insta"))
-        iv.contentMode = .scaleAspectFit
-        navigationItem.titleView = iv
+        let lbl = UILabel()
+        lbl.text = "instagram"
+        lbl.font = UIFont.boldSystemFont(ofSize: 20)
+        navigationItem.titleView = lbl
         
         navigationItem.leftBarButtonItem = UIBarButtonItem(image: UIImage(systemName: "camera")?.withRenderingMode(.alwaysOriginal), style: .plain, target: self, action: #selector(handleCamera))
     }

@@ -12,7 +12,6 @@ var imageCache = [String: UIImage]()
 class CustomImageView: UIImageView {
     
     func loadImage(urlString: String){
-        self.image = nil
         if let cachImage = imageCache[urlString] {
             self.image = cachImage
 //            print("find rimager")
@@ -29,6 +28,7 @@ class CustomImageView: UIImageView {
             // iamge caching
             imageCache[url.absoluteString] = image
             DispatchQueue.main.async {
+                self.image = nil
                 self.image = image
             }
         }.resume()
