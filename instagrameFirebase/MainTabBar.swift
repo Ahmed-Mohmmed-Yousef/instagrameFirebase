@@ -61,7 +61,6 @@ class MainTabBar: UITabBarController, UITabBarControllerDelegate {
         let layout = UICollectionViewFlowLayout()
         let userProfileController = UserProfileController(collectionViewLayout: layout)
         
-        
         let userProfileNavController = templetNavController(image: UIImage(systemName: "person")!, selectedImage: UIImage(systemName: "person.fill")!, rooteViewController: userProfileController)
         
         tabBar.tintColor = .black
